@@ -1,0 +1,85 @@
+/*
++----------------------------------------------------
+| Member Group Color in Forum View 1.0.0
+| ===================================================
+| by Nguyen Tuan Dung (ntd1712)
+| (c) 2006 Vietnamese - Invision Resources
+| http://invisionviet.net/
+| ===================================================
+| Date Started: Mon, 13 Mar 2006 01:31 (GMT+07:00)
+| Release Data: Mon, 13 Mar 2006 01:57 (GMT+07:00)
+| License Info: http://invisionviet.net/license.php
++----------------------------------------------------
+*/
+
+Compatibility: IPB v2.1.x
+Last Updated : Sun, 19 Mar 2006 00:05
+
+File to edit:
+./sources/action_public/forums.php
+
+---------------------------------------------------------------------------------------------
+
+Open: ./sources/action_public/forums.php
+
+Find: [ In function render_forum() ]
+
+		//-----------------------------------------
+		// Show meh the topics!
+		//-----------------------------------------
+
+Add Below:
+
+		# Member Group Color in Forum View
+		if( count($topic_ids) )
+		{
+			$this->ipsclass->DB->build_query( array(
+												'select'   => 't.tid',
+												'from'     => array( 'topics' => 't' ),
+												'where'    => "tid IN(".implode(",", $topic_ids).")",
+												'add_join' => array(
+												# MEMBER TABLE JOIN
+												0 => array( 'select' => 'mg.mgroup as starter_group',
+															'from'   => array( 'members' => 'mg' ),
+															'where'  => 'mg.id=t.starter_id',
+															'type'   => 'left' ),
+												# MEMBER TABLE JOIN
+												1 => array( 'select' => 'pg.mgroup as poster_group',
+															'from'   => array( 'members' => 'pg' ),
+															'where'  => 'pg.id=t.last_poster_id',
+															'type'   => 'left' )
+																	),
+											)		);
+			$this->ipsclass->DB->exec_query();
+
+			while( $m = $this->ipsclass->DB->fetch_row() )
+			{
+				if( is_array($topic_array[ $m['tid'] ]) )
+				{
+					$topic_array[ $m['tid'] ]['starter_group'] = $m['starter_group'];
+					$topic_array[ $m['tid'] ]['poster_group']  = $m['poster_group'];
+				}
+			}
+		}
+
+====================================
+
+Find: [ In function parse_data( $topic ) ]
+
+		$topic['last_poster'] = $topic['last_poster_id'] ? $this->ipsclass->make_profile_link( $topic['last_poster_name'], $topic['last_poster_id']) : "-".$topic['last_poster_name']."-";
+								
+		$topic['starter']     = $topic['starter_id']     ? $this->ipsclass->make_profile_link( $topic['starter_name'], $topic['starter_id']) : "-".$topic['starter_name']."-";
+
+Replace With:
+
+		//$topic['last_poster'] = $topic['last_poster_id'] ? $this->ipsclass->make_profile_link( $topic['last_poster_name'], $topic['last_poster_id']) : "-".$topic['last_poster_name']."-";
+								
+		//$topic['starter']     = $topic['starter_id']     ? $this->ipsclass->make_profile_link( $topic['starter_name'], $topic['starter_id']) : "-".$topic['starter_name']."-";
+		$pgroup = $this->ipsclass->cache['group_cache'][ $topic['poster_group'] ];
+		$sgroup = $this->ipsclass->cache['group_cache'][ $topic['starter_group'] ];
+		$topic['last_poster'] = $topic['last_poster_id'] ? "<a href='{$this->ipsclass->base_url}showuser={$topic['last_poster_id']}'>{$pgroup['prefix']}{$topic['last_poster_name']}{$pgroup['suffix']}</a>" : "-".$topic['last_poster_name']."-";
+		$topic['starter']     = $topic['starter_id']     ? "<a href='{$this->ipsclass->base_url}showuser={$topic['starter_id']}'>{$sgroup['prefix']}{$topic['starter_name']}{$sgroup['suffix']}</a>" : "-".$topic['starter_name']."-";
+
+---------------------------------------------------------------------------------------------
+That's all! :)
+©2006 ntd1712

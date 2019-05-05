@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+<meta charset="utf-8">
+<title>FAGAN-1.COM 2018</title>
+<link rel="stylesheet" href="css/styles.css">
+<meta name = "viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+// Add active class to the current button (highlight it)
+//	Code from Johnmorrisonline.com
+jQuery(document).ready(function($){
+  // Get current path and find target link
+  var path = window.location.pathname.split("/").pop();
+  
+  // Account for home page with empty path
+  if ( path == '' ) {
+    path = 'index.html';
+  }
+      
+  var target = $('nav a[href="'+path+'"]');
+  // Add active class to target link
+  target.addClass('active');
+});
+</script>
+</head>
+<body>
+<nav>
+<ul>
+  <li><a href="index.html">Home</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+	</nav>
+<main>
+  <header>
+    <h1><img src="images/top.png" alt="banner" style="width: 50%;"><br>FAGAN-1.COM</h1>
+  </header>
+    <h2>About</h2>
+<section>
+   <p>About</p>
+  </section>
+  <section>
+  </section>
+  <footer>twitter: <a href="http://twitter.com/iamfagan">@iamfagan </a>| youtube: <a href="http://youtube.com/fagantoi">fagantoi</a></footer>
+</main>
+</body>
+</html>
