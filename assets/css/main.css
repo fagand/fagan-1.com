@@ -4,6 +4,10 @@
   font-family: faganfont;
   src: url(/assets/fonts/other/font.TTF);
 }
+@font-face {
+  font-family: faganfont2;
+  src: url(/assets/fonts/other/font2.TTF);
+}
 :root {
     color-scheme: light dark;
     /* Navigation */
@@ -407,6 +411,7 @@ h6 a {
 h1 {
     font-size: 3.75em;
     font-family: 'Codystar', cursive;
+/*    font-family: faganfont2;*/
 }
 
 h1.major {

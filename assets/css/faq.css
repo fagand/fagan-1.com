@@ -4560,9 +4560,8 @@ body.is-touch .tiles article .content {
 
 /* Style the accordion panel. Note: hidden by default */
 .panel {
-    padding: 1em;
+    padding: 0em 18px;
     max-height: 0;
-    display: none;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
 }
@@ -4750,6 +4749,7 @@ button:hover:active:after,
     /* Remove default text underline */
     display: block;
     /* Make it into a block element to fill the whole list */
+    overflow: auto;
 }
 
 #myUL li a:hover:not(.header) {

@@ -1,3 +1,3 @@
-# DavidFagan.co.uk
+# FAGAN-1.COM
 # Template used from HTML5 UP
-## Main use for site is porfolio
+## Historic PCDJ Site. Now used to show homage to the past.
