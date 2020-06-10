@@ -12,14 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Additonal Code
                     // Get background URL.
                     var bgUrl = image.style.backgroundImage;
+                    // Find position of blurred
+                    var blurred = bgUrl.search("blurred");
+                    console.log(blurred);
+                    // Find position to change url.
+                    var pos = blurred + 8;
+                    console.log(pos);
                     // Extract image path from URL.
-                    var sliced = bgUrl.slice(31, -1).replace(/"/g, "");
+                    var sliced = bgUrl.slice(pos, -1).replace(/"/g, "");
                     // Create new URL with path to larger file size image.
                     var newUrl = "url('/images/siteimages/"
                     +sliced+"')";
-//                    console.log("Background URL = ",bgUrl);
-//                    console.log("Sliced = ",sliced);
-//                    console.log("New Url = ",newUrl);
+                    console.log("Background URL = ",bgUrl);
+                    console.log("Sliced = ",sliced);
+                    console.log("New Url = ",newUrl);
                     
                     // Change background image to new URL.
                     image.style.backgroundImage = newUrl;
