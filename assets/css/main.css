@@ -1,13 +1,16 @@
-@import url("font-awesome.min.css");
+@import url("fontawesome.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Codystar&display=swap");
+
 @font-face {
-  font-family: faganfont;
-  src: url(/assets/fonts/other/font.TTF);
+    font-family: faganfont;
+    src: url(/assets/fonts/other/font.TTF);
 }
+
 @font-face {
-  font-family: faganfont2;
-  src: url(/assets/fonts/other/font2.TTF);
+    font-family: faganfont2;
+    src: url(/assets/fonts/other/font2.TTF);
 }
+
 :root {
     color-scheme: light dark;
     /* Navigation */
@@ -411,7 +414,7 @@ h6 a {
 h1 {
     font-size: 3.75em;
     font-family: 'Codystar', cursive;
-/*    font-family: faganfont2;*/
+    /*    font-family: faganfont2;*/
 }
 
 h1.major {
@@ -2774,6 +2777,12 @@ input[type="radio"] + label:before {
     display: inline-block;
     position: relative;
     filter: grayscale(90%);
+    /* prepare the future animation */
+    -webkit-transition: opacity .5s linear 0.2s;
+    -moz-transition: opacity .5s linear 0.2s;
+    transition: opacity .5s linear 0.2s;
+    /* we set the opacity to 1 to do the magic */
+    opacity: 1;
 }
 
 .image img {
