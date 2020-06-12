@@ -2225,7 +2225,7 @@ button:hover:active:after,
 
 .features section {
     padding: 3.5em 3em 1em 7em;
-    width: 100%;
+    width: 50%;
     border-top: solid 1px var(--white015percent);
     position: relative;
 }
