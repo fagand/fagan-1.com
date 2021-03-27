@@ -10,6 +10,16 @@
     font-family: faganfont2;
     src: url(/assets/fonts/other/font2.TTF);
 }
+@font-face {
+    font-family: ProgrammeBold;
+    src: url(/assets/fonts/programme_bold.ttf);
+    /* https://www.typewolf.com/programme */
+}
+@font-face {
+    font-family: ProgrammeNormal;
+    src: url(/assets/fonts/programme_normal.ttf);
+    /* https://www.typewolf.com/programme */
+}
 
 :root {
     color-scheme: light dark;
@@ -320,7 +330,9 @@ input,
 select,
 textarea {
     color: var(--bodyTextColour);
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: ProgrammeNormal;
+    font-feature-settings: "ss07", "ss08", "ss11", "ss12", "ss14", "ss15", "ss16", "ss18", "ss19", "ss20", "ss21";
     font-size: 16.5pt;
     font-weight: normal;
     line-height: 1.75;
@@ -367,11 +379,19 @@ a {
     border-bottom: dotted 1px var(--aElementborderBottomColour);
     color: inherit;
     text-decoration: none;
+    
 }
 
 a:hover {
     border-bottom-color: transparent;
     color: var(--aElementHoverColour);
+}
+
+.soundytext:link {
+    color: #ff7700;
+}
+.soundytext:hover {
+    color: inherit;
 }
 
 strong,
@@ -413,7 +433,9 @@ h6 a {
 
 h1 {
     font-size: 3.75em;
-    font-family: 'Codystar', cursive;
+    font-family: ProgrammeBold;
+    font-feature-settings: "ss07", "ss08", "ss11", "ss12", "ss14", "ss15", "ss16", "ss18", "ss19", "ss20", "ss21";
+    /* font-family: 'Codystar', cursive; */
     /*    font-family: faganfont2;*/
 }
 
@@ -422,7 +444,7 @@ h1.major {
     position: relative;
     padding-bottom: 0.35em;
     font-size: 2.75em;
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
 }
 
 h1.major:after {
@@ -2061,7 +2083,7 @@ button,
     -ms-transition: border-color 0.2s ease;
     transition: border-color 0.2s ease;
     background-color: transparent;
-    border: solid 1px !important;
+    border: solid 1px;
     border-color: var(--white015percent) !important;
     border-radius: 3em;
     color: var(--white) !important;
@@ -4692,4 +4714,13 @@ body.is-touch .tiles article .content {
         margin: 1.25em 0 0 0;
     }
 
+}
+
+.soundgrid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.soundgrid > * {
+    flex: 1 1 1em;
 }

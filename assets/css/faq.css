@@ -5,7 +5,14 @@
     font-family: faganfont;
     src: url(/assets/fonts/other/font.TTF);
 }
-
+@font-face {
+    font-family: ProgrammeNormal;
+    src: url(/assets/fonts/programme_normal.ttf);
+    /* https://www.typewolf.com/programme */
+}
+body {
+	font-family: ProgrammeNormal;
+}
 :root {
     color-scheme: light dark;
     /* Navigation */
@@ -315,7 +322,9 @@ input,
 select,
 textarea {
     color: var(--bodyTextColour);
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: ProgrammeNormal;
+    font-feature-settings: "ss07", "ss08", "ss11", "ss12", "ss14", "ss15", "ss16", "ss18", "ss19", "ss20", "ss21";
     font-size: 16.5pt;
     font-weight: normal;
     line-height: 1.75;
@@ -416,7 +425,9 @@ h1.major {
     position: relative;
     padding-bottom: 0.35em;
     font-size: 2.75em;
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: ProgrammeNormal;
+    font-feature-settings: "ss07", "ss08", "ss11", "ss12", "ss14", "ss15", "ss16", "ss18", "ss19", "ss20", "ss21";
 }
 
 h1.major:after {
