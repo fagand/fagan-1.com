@@ -1,0 +1,143 @@
+@font-face {
+    font-family: ProgrammeBold;
+    src: url(/assets/fonts/programme_bold.ttf);
+    /* https://www.typewolf.com/programme */
+}
+@font-face {
+    font-family: ProgrammeNormal;
+    src: url(/assets/fonts/programme_normal.ttf);
+    /* https://www.typewolf.com/programme */
+}
+
+:root {
+    color-scheme: light dark;
+    /* Body */
+    --mainbgcolor: #84a98c;
+    --bodyTextColour: #354f52;
+    --bodyHeadingColour: #2f3e46;
+    --midsectioncolor: #fff;
+    --footercolor: #52796f;
+    --sectionscolor: #ffffff;
+    --imagefadecolor: rgba(255, 255, 255, 0.65);
+    --white: #000;
+    --black: #000;
+    --white015percent: #000;
+    --white55percent: rgba(0, 0, 0, 0.55);
+    --formBorderColour: rgba(0, 0, 0, 0.55);
+    --formBorderColourFocus: rgba(0, 0, 0, 0.95);
+    --buttonHoverColour: rgba(0, 0, 0, 0.55);
+    --aElementborderBottomColour: var(--footercolor);
+    --aElementHoverColour: var(--footercolor);
+    --backgroundimage: url("/assets/css/images/noise-light.png");
+}
+
+@media (prefers-color-scheme: light) {
+    #header {
+        background-color: var(--pageNavColour);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Navigation */
+        --navBackgroundColour: #101400;
+        --navInactiveTextColour: rgba(204, 255, 0, 0.4);
+        --navLineUnderUnactiveText: rgba(204, 255, 0, 0.4);
+        --navInactiveTextHoverColour: rgba(204, 255, 0);
+        --navActiveTextColour: #fff;
+        --navActiveLineUnderTextColour: #fff;
+        --navGradientLineStartColour: #000;
+
+        /* Addition Pages */
+        --linestartcolor: rgba(204, 255, 0, 0.50);
+        --pageInactiveLinkColours: #84a98c;
+        --xtrapagesfootercolor: #121212;
+        --pageNavColour: #cad2c5;
+        --pagesUnactiveLinkHoverColour: #ccff00;
+
+        /* Body */
+        --mainbgcolor: #000;
+        --bodyTextColour: #ccff00;
+        --bodyHeadingColour: #ccff00;
+        --midsectioncolor: #000;
+        --footercolor: #101400;
+        --sectionscolor: #000;
+        --imagefadecolor: rgba(0, 0, 0, 0.65);
+        --white: #fff;
+        --black: #fff;
+        --white015percent: rgba(255, 255, 255, 0.25);
+        --white55percent: rgba(255, 255, 255, 0.55);
+        --formBorderColour: rgba(204, 255, 0, 0.4);
+        --formBorderColourFocus: rgba(255, 255, 255, 0.8);
+        --buttonHoverColour: rgba(204, 255, 0, 0.65);
+        --aElementborderBottomColour: #ccff00;
+        --aElementHoverColour: #ccff00;
+        --backgroundimage: url("/assets/css/images/noise-light.png");
+    }
+
+    #header {
+        background-color: #383838;
+    }
+}
+
+body {
+    background-image: var(--backgroundimage);
+    font-family: ProgrammeNormal;
+    background-color: var(--mainbgcolor);
+}
+
+.outer_Div {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 4.5rem 0px 5rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}
+.inner_Div {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+.inner_Div_text {
+    font-size: 3.5rem;
+    line-height: 3rem;
+    max-width: 700px;
+    font-family: ProgrammeNormal;
+    text-align: center;
+    font-weight: 700;
+}
+.image {
+    border-radius: 0.25em;
+    border: 0;
+    display: inline-block;
+    position: relative;
+    /* prepare the future animation */
+    -webkit-transition: opacity .5s linear 0.2s;
+    -moz-transition: opacity .5s linear 0.2s;
+    transition: opacity .5s linear 0.2s;
+    /* we set the opacity to 1 to do the magic */
+    opacity: 1;
+}
+
+.image.small {
+    width: 20%;
+}
+
+.features section {
+    padding: 3.5em 3em 1em 7em;
+    width: 50%;
+    border-top: solid 1px var(--white015percent);
+    position: relative;
+}
+a {
+    -moz-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    -webkit-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    -ms-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    color: inherit;
+    text-decoration: none;
+    
+}

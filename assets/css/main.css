@@ -120,11 +120,30 @@
     }
 }
 
-/*
-	Hyperspace by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
+.outer_Div {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 4.5rem 0px 5rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}
+.inner_Div {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+.inner_Div_text {
+    font-size: 3.5rem;
+    line-height: 3rem;
+    max-width: 700px;
+    color: rgba(204, 255, 0);
+    font-family: ProgrammeNormal;
+    text-align: center;
+    font-weight: 700;
+}
 
 html,
 body,
@@ -2805,6 +2824,10 @@ input[type="radio"] + label:before {
     transition: opacity .5s linear 0.2s;
     /* we set the opacity to 1 to do the magic */
     opacity: 1;
+}
+
+.image.small {
+    width: 20%;
 }
 
 .image img {
