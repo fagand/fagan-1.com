@@ -12,7 +12,7 @@
 :root {
     color-scheme: light dark;
     /* Body */
-    --mainbgcolor: #84a98c;
+    --mainbgcolor: #fff;
     --bodyTextColour: #354f52;
     --bodyHeadingColour: #2f3e46;
     --midsectioncolor: #fff;
@@ -28,7 +28,7 @@
     --buttonHoverColour: rgba(0, 0, 0, 0.55);
     --aElementborderBottomColour: var(--footercolor);
     --aElementHoverColour: var(--footercolor);
-    --backgroundimage: url("/assets/css/images/noise-light.png");
+    --backgroundimage: url("/assets/css/images/noisy2.png");
 }
 
 @media (prefers-color-scheme: light) {
@@ -81,9 +81,10 @@
 }
 
 body {
-    background-image: var(--backgroundimage);
+    /* background-image: var(--backgroundimage); */
     font-family: ProgrammeNormal;
     background-color: var(--mainbgcolor);
+    font-size: .8em;
 }
 
 .outer_Div {
@@ -120,6 +121,7 @@ body {
     transition: opacity .5s linear 0.2s;
     /* we set the opacity to 1 to do the magic */
     opacity: 1;
+    width: 10em;
 }
 
 .image.small {
@@ -140,4 +142,8 @@ a {
     color: inherit;
     text-decoration: none;
     
+}
+#main {
+    padding: 5em;
+    text-align: center;
 }
