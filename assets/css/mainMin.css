@@ -1,149 +1,248 @@
 @font-face {
-    font-family: ProgrammeBold;
-    src: url(/assets/fonts/programme_bold.ttf);
-    /* https://www.typewolf.com/programme */
+  font-family: ProgrammeBold;
+  src: url(/assets/fonts/programme_bold.ttf);
+  /* https://www.typewolf.com/programme */
 }
 @font-face {
-    font-family: ProgrammeNormal;
-    src: url(/assets/fonts/programme_normal.ttf);
-    /* https://www.typewolf.com/programme */
+  font-family: ProgrammeNormal;
+  src: url(/assets/fonts/programme_normal.ttf);
+  /* https://www.typewolf.com/programme */
 }
 
 :root {
-    color-scheme: light dark;
-    /* Body */
-    --mainbgcolor: #fff;
-    --bodyTextColour: #354f52;
-    --bodyHeadingColour: #2f3e46;
-    --midsectioncolor: #fff;
-    --footercolor: #52796f;
-    --sectionscolor: #ffffff;
-    --imagefadecolor: rgba(255, 255, 255, 0.65);
-    --white: #000;
-    --black: #000;
-    --white015percent: #000;
-    --white55percent: rgba(0, 0, 0, 0.55);
-    --formBorderColour: rgba(0, 0, 0, 0.55);
-    --formBorderColourFocus: rgba(0, 0, 0, 0.95);
-    --buttonHoverColour: rgba(0, 0, 0, 0.55);
-    --aElementborderBottomColour: var(--footercolor);
-    --aElementHoverColour: var(--footercolor);
-    --backgroundimage: url("/assets/css/images/noisy2.png");
+  color-scheme: light dark;
+  /* Body */
+  --mainbgcolor: #fff;
+  --bodyTextColour: #ccff00;
+  --bodyHeadingColour: #2f3e46;
+  --midsectioncolor: #fff;
+  --footercolor: #ccff00;
+  --sectionscolor: #ffffff;
+  --imagefadecolor: rgba(255, 255, 255, 0.65);
+  --white: #000;
+  --black: #000;
+  --white015percent: #000;
+  --white55percent: rgba(0, 0, 0, 0.55);
+  --formBorderColour: rgba(0, 0, 0, 0.55);
+  --formBorderColourFocus: rgba(0, 0, 0, 0.95);
+  --buttonHoverColour: rgba(0, 0, 0, 0.55);
+  --aElementborderBottomColour: var(--footercolor);
+  --aElementHoverColour: var(--footercolor);
+  --backgroundimage: url("/assets/css/images/noisy2.png");
+  --gradient: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(0,0,4,1) 25%, rgba(255,255,255,1) 30%, rgba(0,0,0,1) 35%, rgba(204,255,0,1) 50%, rgba(0,0,0,1) 65%, rgba(255,255,255,1) 70%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 100%);
 }
 
+.wave {
+  width: 100%;
+  height: auto;
+  animation: pathAnim 7s;
+}
+
+@keyframes pathAnim {
+  0%{
+    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
+  }
+  50%{
+    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
+  }
+  100%{
+    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
+  }
+}
+
+
 @media (prefers-color-scheme: light) {
-    #header {
-        background-color: var(--pageNavColour);
-    }
+  #header {
+    background-color: var(--pageNavColour);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        /* Navigation */
-        --navBackgroundColour: #101400;
-        --navInactiveTextColour: rgba(204, 255, 0, 0.4);
-        --navLineUnderUnactiveText: rgba(204, 255, 0, 0.4);
-        --navInactiveTextHoverColour: rgba(204, 255, 0);
-        --navActiveTextColour: #fff;
-        --navActiveLineUnderTextColour: #fff;
-        --navGradientLineStartColour: #000;
+  :root {
+    /* Navigation */
+    --navBackgroundColour: #101400;
+    --navInactiveTextColour: rgba(204, 255, 0, 0.4);
+    --navLineUnderUnactiveText: rgba(204, 255, 0, 0.4);
+    --navInactiveTextHoverColour: rgba(204, 255, 0);
+    --navActiveTextColour: #fff;
+    --navActiveLineUnderTextColour: #fff;
+    --navGradientLineStartColour: #000;
 
-        /* Addition Pages */
-        --linestartcolor: rgba(204, 255, 0, 0.50);
-        --pageInactiveLinkColours: #84a98c;
-        --xtrapagesfootercolor: #121212;
-        --pageNavColour: #cad2c5;
-        --pagesUnactiveLinkHoverColour: #ccff00;
+    /* Addition Pages */
+    --linestartcolor: rgba(204, 255, 0, 0.5);
+    --pageInactiveLinkColours: #84a98c;
+    --xtrapagesfootercolor: #121212;
+    --pageNavColour: #cad2c5;
+    --pagesUnactiveLinkHoverColour: #ccff00;
 
-        /* Body */
-        --mainbgcolor: #000;
-        --bodyTextColour: #ccff00;
-        --bodyHeadingColour: #ccff00;
-        --midsectioncolor: #000;
-        --footercolor: #101400;
-        --sectionscolor: #000;
-        --imagefadecolor: rgba(0, 0, 0, 0.65);
-        --white: #fff;
-        --black: #fff;
-        --white015percent: rgba(255, 255, 255, 0.25);
-        --white55percent: rgba(255, 255, 255, 0.55);
-        --formBorderColour: rgba(204, 255, 0, 0.4);
-        --formBorderColourFocus: rgba(255, 255, 255, 0.8);
-        --buttonHoverColour: rgba(204, 255, 0, 0.65);
-        --aElementborderBottomColour: #ccff00;
-        --aElementHoverColour: #ccff00;
-        --backgroundimage: url("/assets/css/images/noise-light.png");
-    }
+    /* Body */
+    --mainbgcolor: #000;
+    --bodyTextColour: #ccff00;
+    --bodyHeadingColour: #ccff00;
+    --midsectioncolor: #000;
+    --footercolor: #101400;
+    --sectionscolor: #000;
+    --imagefadecolor: rgba(0, 0, 0, 0.65);
+    --white: #fff;
+    --black: #fff;
+    --white015percent: rgba(255, 255, 255, 0.25);
+    --white55percent: rgba(255, 255, 255, 0.55);
+    --formBorderColour: rgba(204, 255, 0, 0.4);
+    --formBorderColourFocus: rgba(255, 255, 255, 0.8);
+    --buttonHoverColour: rgba(204, 255, 0, 0.65);
+    --aElementborderBottomColour: #ccff00;
+    --aElementHoverColour: #ccff00;
+    --backgroundimage: url("/assets/css/images/noise-light.png");
+  }
 
-    #header {
-        background-color: #383838;
-    }
+  #header {
+    background-color: #383838;
+  }
 }
 
+@keyframes gradientAnimation {
+  0% {background-position: left;}
+  100% {background-position: right;}
+  
+}
+
+h1 {
+  font-size: 1rem;
+  background-image: var(--gradient);
+  background-clip: text;
+  color: transparent;
+  background-size: 200%;
+  animation: gradientAnimation 8s infinite alternate;
+  width: 100%;
+}
+@media screen and (max-width: 375px) {
+  h1 {
+    font-size: 1rem;
+  }
+}
+
+css-doodle {
+  z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  contain: content;
+  
+  --grid-size: min(100vw, 100vh);
+    width: var(--grid-size);
+    height: var(--grid-size);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+css-doodle * {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
 body {
-    /* background-image: var(--backgroundimage); */
-    font-family: ProgrammeNormal;
-    background-color: var(--mainbgcolor);
-    font-size: .8em;
-}
-
-.outer_Div {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 4.5rem 0px 5rem;
-    align-items: center;
-    justify-content: center;
-    min-height: 100%;
-}
-.inner_Div {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-}
-.inner_Div_text {
-    font-size: 3.5rem;
-    line-height: 3rem;
-    max-width: 700px;
-    font-family: ProgrammeNormal;
-    text-align: center;
-    font-weight: 700;
+  /* background-image: var(--backgroundimage); */
+  font-family: ProgrammeNormal;
+  background-color: var(--mainbgcolor);
+  font-size: 0.8rem;
+  display: grid;
+  grid-template-columns: 20em auto 20em;
+  padding: 10px;
+  text-align: justify;
+  -moz-text-align-last: center;
+  text-align-last: center;
+  position: relative;
 }
 .image {
-    border-radius: 0.25em;
-    border: 0;
-    display: inline-block;
-    position: relative;
-    /* prepare the future animation */
-    -webkit-transition: opacity .5s linear 0.2s;
-    -moz-transition: opacity .5s linear 0.2s;
-    transition: opacity .5s linear 0.2s;
-    /* we set the opacity to 1 to do the magic */
-    opacity: 1;
-    width: 10em;
+  border-radius: 0.25em;
+  border: 0;
+  display: inline-block;
+  position: relative;
+  /* prepare the future animation */
+  -webkit-transition: opacity 0.5s linear 0.2s;
+  -moz-transition: opacity 0.5s linear 0.2s;
+  transition: opacity 0.5s linear 0.2s;
+  /* we set the opacity to 1 to do the magic */
+  opacity: 1;
+  width: 10em;
 }
 
 .image.small {
-    width: 20%;
-}
-
-.features section {
-    padding: 3.5em 3em 1em 7em;
-    width: 50%;
-    border-top: solid 1px var(--white015percent);
-    position: relative;
+  width: 20%;
 }
 a {
-    -moz-transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    -webkit-transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    -ms-transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    transition: color 0.2s ease, border-bottom-color 0.2s ease;
-    color: inherit;
-    text-decoration: none;
-    
+  -moz-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  -webkit-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  -ms-transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+  color: inherit;
+  text-decoration: var(--aElementHoverColour);
+  text-decoration-line: underline;
+}
+a:hover, a:focus {
+  color: var(--aElementHoverColour);
+  text-decoration-line: underline;
+  text-decoration-color: #000;
+  /* fill: var(--aElementHoverColour); */
 }
 #main {
-    padding: 5em;
-    text-align: center;
+  padding: 10em;
+}
+.svg-container {
+  display: inline-block;
+  height: 2.5em;
+  width: 2.5em;
+  vertical-align: middle;
+}
+
+.mySVG {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+footer {
+  text-align: center;
+}
+/* Default fill and stroke colors */
+.myPath {
+  fill: #000000;
+}
+
+/* Dark mode colors */
+.myPath.dark-mode {
+  fill: #ffffff;
+}
+
+/* Hover styles */
+@media (prefers-color-scheme: light) {
+  .myPath:hover, .myPath:focus {
+    fill: var(--aElementHoverColour);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .myPath:hover, .myPath:focus {
+    fill: var(--aElementHoverColour);
+  }
+}
+.grid-item {
+  padding: 20px;
+  /* padding-left: 180px;
+  padding-right: 180px; */
+  text-align: justify;
+}
+.center {
+  text-align: center;
+}
+@media screen and (max-width: 780px) {
+  body {
+    display: grid;
+    grid-template-columns: auto auto auto !important;
+    padding: 10px;
+  }
 }

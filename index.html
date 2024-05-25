@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Hyperspace by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html lang="en">
 
 <head>
@@ -25,6 +20,7 @@
     </noscript>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="assets/js/svgInvert.js"></script>
     <!-- Favicon -->
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
@@ -38,17 +34,19 @@
     <meta name="msapplication-config" content="/favicon/browserconfig.xml">
     <meta name="theme-color" content="#000">
     <!-- Google Ads -->
-    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-3755930033410564",
             enable_page_level_ads: true
         });
 
-    </script>
+    </script> -->
     <link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css" />
     <!-- Cookie Popup -->
     <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
+    <!-- CSS Doodle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.39.1/css-doodle.min.js"></script>
     <script>
         window.addEventListener("load", function () {
             window.wpcc.init({
@@ -88,23 +86,121 @@
 </head>
 
 <body class="is-preload">
+    <css-doodle>
+        <style>
+          @grid: 20x1 / 100%;
+          :doodle {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                /* transform: translate(-50%, -50%); */
+            }
+          :container {
+            perspective: 100vmin;
+          }
+          background: @m(
+            @r(10, 10), 
+            radial-gradient(
+              @p(
+                @var(--bodyTextColour), 
+                @var(--white)) 15%,
+              transparent 50%
+            ) @r(100%) @r(100%) / @r(1%, 3%) @lr no-repeat
+          );
+      
+          @size: 80%;
+          @place-cell: center;
+      
+          border-radius: 50%;
+          transform-style: preserve-3d;
+          animation: scale-up 20s linear infinite;
+          animation-delay: calc(@i * -.4s);
+      
+          @keyframes scale-up {
+            0% {
+              opacity: 0;
+              transform: translate3d(0, 0, 0) rotate(0);
+            }
+            10% { 
+              opacity: 1; 
+            }
+            95% {
+              transform:
+                translate3d(0, 0, @r(50vmin, 55vmin))
+                rotate(@r(-360deg, 360deg));
+            }
+            100% {
+              opacity: 0;
+              transform: translate3d(0, 0, 1vmin);
+            }
+          }
+        </style>
+      </css-doodle>
     <!--Facebook Code-->
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v7.0"
         nonce="wO2hafnT"></script>
     <!--Facebook Code End-->
 
-    <section id="">
-        <div class="outer_Div">
-            <div class="inner_Div inner_Div_Text">
-                <img class="image small" src="favicon/android-chrome-512x512.png">
-                fagan-1
-                <div class="features">
-                    <a href="/mixtapes/">🎶</a>
+    <div class="grid-container">
+        <div class="grid-item"></div>
+        <div class="grid-item">
+            <div class="center">
+            <h1><a href="http://fagan-1.com">fagan-1.com</a> | <a href="http://davidfagan.co.uk">davidfagan.co.uk</a></h1>
+            <img src="images/SilverDF.png" class="image">
+            <p>Est. 2006</p></div>
+            <div>
+                Welcome to Fagan-1.Com, a cherished piece of digital history! Between the years of 2006 and 2009,
+                Fagan-1.Com was one of the most frequented online destinations for teenagers in Scotland, who were eagerly
+                seeking the then-trending PCDJ music. My commitment to providing regular updates and a reliable platform
+                contributed significantly to the site’s popularity during that time.</p>
+    
+            <p>In the present day, the demand for this genre of music has waned, and the website has seen a decrease in visitors. However, I understand that there may still be individuals who stumble upon the site, perhaps those
+                who fondly remember it from yesteryears.</p>
+    
+            <p>For those of you who are not familiar with the website, I invite you to explore its history through the web
+                archive by clicking the <a href="http://web.archive.org/web/*/www.fagan-1.com/" target="_blank">link
+                    here</a>.</p>
+            <br>
+            For those who still yearn for the music, it's still here, waiting for you. <a href="/mixtapes/">Click here
+                to access the music 🎶</a>
+            </p>
+            <footer id="footer">
+                <div class="svg-container">
+                    <a href="http://x.com/iamfagan"><svg class="mySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                            <path class="myPath"
+                                d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z">
+                            </path>
+                        </svg></a>
                 </div>
-            </div>
+                <div class="svg-container">
+                    <a href="http://linkedin.com/in/iamfagan"><svg class="mySVG" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 50 50">
+                            <path class="myPath"
+                                d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M17,20v19h-6V20H17z M11,14.47c0-1.4,1.2-2.47,3-2.47s2.93,1.07,3,2.47c0,1.4-1.12,2.53-3,2.53C12.2,17,11,15.87,11,14.47z M39,39h-6c0,0,0-9.26,0-10 c0-2-1-4-3.5-4.04h-0.08C27,24.96,26,27.02,26,29c0,0.91,0,10,0,10h-6V20h6v2.56c0,0,1.93-2.56,5.81-2.56 c3.97,0,7.19,2.73,7.19,8.26V39z">
+                            </path>
+                        </svg></a>
+                </div>
+            </footer>
         </div>
-    </section>
+        <div class="grid-item"></div>  
+    </div>
+
+    <!-- Test SVG -->
+    <!-- <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 756 823" preserveAspectRatio="xMidYMid" width="756" height="823">
+        <linearGradient id="lg-o578w6yh81n" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#000000"/>
+          <stop offset="1" stop-color="#ccff00"/>
+        </linearGradient>
+        <path class="wave1" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z"/>
+        <path class="wave2" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 514.533 Q 75.6 496.05 151.2 471.226 T 302.4 411.496 T 453.6 336.297 T 604.8 268.815 T 756 269.261 L 756 0 Z"/>
+        <path class="wave3" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 527.583 Q 75.6 576.392 151.2 552.171 T 302.4 368.545 T 453.6 401.836 T 604.8 311.593 T 756 254.076 L 756 0 Z"/>
+        <path class="wave4" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 562.99 Q 75.6 484.815 151.2 460.094 T 302.4 480.688 T 453.6 374.616 T 604.8 408.038 T 756 321.327 L 756 0 Z"/>
+        <path class="wave5" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 589.213 Q 75.6 502.584 151.2 481.239 T 302.4 405.334 T 453.6 416.459 T 604.8 262.373 T 756 206.223 L 756 0 Z"/>
+      </svg>    -->
+      
 
     <!-- Scripts -->
     <script src="assets/js/jquery.min.js"></script>
