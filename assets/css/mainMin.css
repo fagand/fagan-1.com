@@ -38,19 +38,6 @@
   animation: pathAnim 7s;
 }
 
-@keyframes pathAnim {
-  0%{
-    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
-  }
-  50%{
-    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
-  }
-  100%{
-    d: path("M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z")
-  }
-}
-
-
 @media (prefers-color-scheme: light) {
   #header {
     background-color: var(--pageNavColour);
@@ -98,12 +85,6 @@
   #header {
     background-color: #383838;
   }
-}
-
-@keyframes gradientAnimation {
-  0% {background-position: left;}
-  100% {background-position: right;}
-  
 }
 
 h1 {

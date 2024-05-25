@@ -34,14 +34,14 @@
     <meta name="msapplication-config" content="/favicon/browserconfig.xml">
     <meta name="theme-color" content="#000">
     <!-- Google Ads -->
-    <!-- <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
         (adsbygoogle = window.adsbygoogle || []).push({
             google_ad_client: "ca-pub-3755930033410564",
             enable_page_level_ads: true
         });
 
-    </script> -->
+    </script>
     <link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css" />
     <!-- Cookie Popup -->
     <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
@@ -88,20 +88,19 @@
 <body class="is-preload">
     <css-doodle>
         <style>
-          @grid: 20x1 / 100%;
+          @grid: 50x1 / 50vmin;
           :doodle {
                 width: 100%;
                 height: 100%;
                 position: fixed;
                 top: 0;
                 left: 0;
-                /* transform: translate(-50%, -50%); */
             }
           :container {
-            perspective: 100vmin;
+            perspective: 23vmin;
           }
           background: @m(
-            @r(10, 10), 
+            @r(10, 5), 
             radial-gradient(
               @p(
                 @var(--bodyTextColour), 
@@ -187,20 +186,6 @@
         </div>
         <div class="grid-item"></div>  
     </div>
-
-    <!-- Test SVG -->
-    <!-- <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 756 823" preserveAspectRatio="xMidYMid" width="756" height="823">
-        <linearGradient id="lg-o578w6yh81n" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#000000"/>
-          <stop offset="1" stop-color="#ccff00"/>
-        </linearGradient>
-        <path class="wave1" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 556.91 Q 75.6 532.9 151.2 512.9 T 302.4 392.4 T 453.6 354.87 T 604.8 411.31 T 756 326.13 L 756 0 Z"/>
-        <path class="wave2" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 514.533 Q 75.6 496.05 151.2 471.226 T 302.4 411.496 T 453.6 336.297 T 604.8 268.815 T 756 269.261 L 756 0 Z"/>
-        <path class="wave3" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 527.583 Q 75.6 576.392 151.2 552.171 T 302.4 368.545 T 453.6 401.836 T 604.8 311.593 T 756 254.076 L 756 0 Z"/>
-        <path class="wave4" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 562.99 Q 75.6 484.815 151.2 460.094 T 302.4 480.688 T 453.6 374.616 T 604.8 408.038 T 756 321.327 L 756 0 Z"/>
-        <path class="wave5" opacity="0.4" fill="url(#lg-o578w6yh81n)" d="M 0 0 L 0 589.213 Q 75.6 502.584 151.2 481.239 T 302.4 405.334 T 453.6 416.459 T 604.8 262.373 T 756 206.223 L 756 0 Z"/>
-      </svg>    -->
-      
 
     <!-- Scripts -->
     <script src="assets/js/jquery.min.js"></script>
