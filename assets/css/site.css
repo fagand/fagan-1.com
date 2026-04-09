@@ -1,0 +1,286 @@
+/* =================================================================
+   site.css — Shared design system  |  fagan-1.com
+   Used by all sub-pages (mixtapes, tracklist, archive).
+   index.html uses its own inline styles — tokens are mirrored.
+   ================================================================= */
+
+/* ---- Design tokens ---- */
+:root {
+    --accent:      #ccff00;
+    --accent-rgb:  204, 255, 0;
+    --bg:          #000000;
+    --white:       #ffffff;
+    --text:        rgba(255, 255, 255, 0.82);
+    --text-dim:    rgba(255, 255, 255, 0.40);
+    --card-bg:     rgba(6, 6, 6, 0.65);
+    --card-border: rgba(204, 255, 0, 0.13);
+    --header-h:    56px;
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: var(--bg);
+    color: var(--white);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+                 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: transparent;
+    min-height: 100vh;
+}
+
+/* ---- Canvas background (fixed, behind everything) ---- */
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ================================================================
+   SITE HEADER
+   ================================================================ */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border-bottom: 1px solid rgba(204, 255, 0, 0.09);
+}
+
+.site-header .brand {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity 0.2s;
+}
+.site-header .brand:hover { opacity: 0.7; }
+
+.site-header nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.site-header nav::-webkit-scrollbar { display: none; }
+
+.site-header nav a {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.50);
+    text-decoration: none;
+    padding: 6px 11px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+}
+.site-header nav a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+.site-header nav a.active { color: var(--accent); }
+
+/* Separator dot */
+.site-header .sep {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+}
+
+/* ================================================================
+   PAGE WRAP — constrains content width, adds scroll padding
+   ================================================================ */
+.page-wrap {
+    position: relative;
+    z-index: 10;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 52px 24px 80px;
+    scroll-padding-top: calc(var(--header-h) + 24px);
+}
+
+/* ================================================================
+   PAGE HERO
+   ================================================================ */
+.page-hero {
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.page-hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.page-hero h1 em {
+    color: var(--accent);
+    font-style: normal;
+}
+
+.page-hero p {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ================================================================
+   GLASS CARD
+   ================================================================ */
+.glass-card {
+    position: relative;
+    background: var(--card-bg);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Accent top-edge glow line */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(to right,
+        transparent, rgba(204, 255, 0, 0.35), transparent);
+    pointer-events: none;
+}
+
+/* ================================================================
+   BODY TEXT (general prose inside cards)
+   ================================================================ */
+.glass-card p,
+.prose p {
+    font-size: 14.5px;
+    line-height: 1.78;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.glass-card a,
+.prose a {
+    color: var(--white);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.22);
+    padding-bottom: 1px;
+    transition: color 0.25s, border-color 0.25s;
+}
+.glass-card a:hover,
+.prose a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* ================================================================
+   PILL BUTTON (shared across pages)
+   ================================================================ */
+.pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    background: rgba(204, 255, 0, 0.07);
+    border: 1px solid rgba(204, 255, 0, 0.28);
+    border-radius: 100px;
+    color: var(--accent);
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        background   0.3s,
+        border-color 0.3s,
+        color        0.25s,
+        box-shadow   0.3s,
+        transform    0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pill-btn:hover {
+    background: rgba(204, 255, 0, 0.13);
+    border-color: rgba(204, 255, 0, 0.5);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(204, 255, 0, 0.16);
+}
+
+/* ================================================================
+   SITE FOOTER
+   ================================================================ */
+.site-footer {
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 28px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 28px;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.site-footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.site-footer a:hover { color: var(--accent); }
+
+/* ================================================================
+   KEYFRAMES
+   ================================================================ */
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 640px) {
+    .page-wrap { padding: 36px 16px 60px; }
+    .page-hero  { margin-bottom: 36px; }
+    .site-header { padding: 0 16px; gap: 12px; }
+}

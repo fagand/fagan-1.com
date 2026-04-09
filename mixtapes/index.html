@@ -1,267 +1,398 @@
 <!DOCTYPE HTML>
-<!--
-	Hyperspace by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html lang="en">
 
 <head>
     <title>The Mixtapes on SoundCloud | fagan-1.com</title>
     <meta charset="utf-8" />
-    <!-- Meta Data -->
-    <meta property="og:site_name" content="fagan-1.com">
-    <meta property="og:title" content="Scotland's Original PCDJ site. ">
-    <meta property="og:url" content="https://www.fagan-1.com">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://fagan-1.com/images/mixtapesthumb.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <!-- Open Graph -->
+    <meta property="og:site_name"   content="fagan-1.com">
+    <meta property="og:title"       content="Scotland's Original PCDJ site.">
+    <meta property="og:url"         content="https://www.fagan-1.com">
+    <meta property="og:type"        content="website">
+    <meta property="og:image"       content="https://fagan-1.com/images/mixtapesthumb.jpg">
     <meta property="og:description" content="Scotland's Original PCDJ site.">
-    <meta property="fb:app_id" content="APPID">
-    <meta name="keywords"
-        content="David Fagan, David John Fagan, fagan-1.com, davidfagan.co.uk, @iamfagan, HTML, CSS, JavaScript, Fagan, David, Glasgow, Scotland, Airdrie">
+    <meta name="keywords" content="David Fagan, David John Fagan, fagan-1.com, davidfagan.co.uk, @iamfagan, HTML, CSS, JavaScript, Fagan, David, Glasgow, Scotland, Airdrie">
     <meta name="author" content="David Fagan">
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:description" content="Scotland's Original PCDJ Website" />
+    <meta name="twitter:title"       content="Fagan-1.Com — The Mixtapes" />
+    <meta name="twitter:site"        content="@iamfagan" />
+    <meta name="twitter:image"       content="https://fagan-1.com/images/mixtapesthumb.jpg" />
+    <meta name="twitter:creator"     content="@iamfagan" />
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/favicon/site.webmanifest">
-    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5848a0">
+    <link rel="manifest"     href="/favicon/site.webmanifest">
+    <link rel="mask-icon"    href="/favicon/safari-pinned-tab.svg" color="#ccff00">
     <link rel="shortcut icon" href="/favicon/favicon.ico">
-    <meta name="msapplication-TileColor" content="#5848a0">
-    <meta name="msapplication-config" content="/favicon/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-    <!-- Style -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/assets/css/main.css" />
-    <noscript>
-        <link rel="stylesheet" href="/assets/css/noscript.css" />
-    </noscript>
-    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-3755930033410564",
-            enable_page_level_ads: true
-        });
-    </script>
+    <meta name="msapplication-TileColor" content="#ccff00">
+    <meta name="msapplication-config"    content="/favicon/browserconfig.xml">
+    <meta name="theme-color"             content="#000">
+    <!-- Shared design system -->
+    <link rel="stylesheet" href="/assets/css/site.css" />
     <script src="https://kit.fontawesome.com/d65db72a01.js" crossorigin="anonymous"></script>
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3755930033410564", enable_page_level_ads: true });</script>
+
+    <style>
+        /* ---- Mixtape grid ---- */
+        .mixtape-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 20px;
+            opacity: 0;
+            animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+        }
+
+        .mixtape-card {
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .mixtape-card:hover {
+            border-color: rgba(204, 255, 0, 0.28);
+            box-shadow: 0 0 0 1px rgba(204, 255, 0, 0.06),
+                        0 16px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .mixtape-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .mixtape-num {
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(204,255,0,0.55);
+            font-weight: 500;
+        }
+
+        .mixtape-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        .copyright-note {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .mixtape-player {
+            flex: 1;
+            display: block;
+            width: 100%;
+            border: none;
+        }
+
+        .sc-attr {
+            padding: 10px 20px 14px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.22);
+            line-break: anywhere;
+            word-break: normal;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .sc-attr a {
+            color: rgba(255,255,255,0.22) !important;
+            text-decoration: none;
+            border: none !important;
+        }
+
+        /* ---- Support strip ---- */
+        .support-strip {
+            margin-top: 48px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        }
+
+        .support-strip p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.04em;
+        }
+
+        @media (max-width: 480px) {
+            .mixtape-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 
-<body class="is-preload">
+<body>
+
+    <canvas id="bg-canvas"></canvas>
 
     <!-- Header -->
-    <header id="header">
-        <a href="/index.html" class="title">Fagan-1.com</a>
+    <header class="site-header">
+        <a href="/index.html" class="brand">Fagan-1.com</a>
+        <div class="sep"></div>
         <nav>
-            <ul>
-                <li><a href="/index.html">Home</a></li>
-                <li><a href="/mixtapes/" class="active">The Mixtapes</a></li>
-                <li><a href="tracklist/">Track-lists</a></li>
-                <li><a href="archive/">Track Archive</a></li>
-            </ul>
+            <a href="/index.html">Home</a>
+            <a href="/mixtapes/" class="active">The Mixtapes</a>
+            <a href="/mixtapes/tracklist/">Track-lists</a>
+            <a href="/mixtapes/archive/">Archive</a>
         </nav>
     </header>
 
-    <!-- Wrapper -->
-    <div id="wrapper">
+    <!-- Content -->
+    <main class="page-wrap">
 
-        <!-- Main -->
-        <section id="main" class="wrapper fade-down">
-            <div class="inner">
-                <h1 class="major">Listen on Soundcloud</h1>
-                <p>Use the below players to listen to the mixtapes on Soundcloud. As predicted, some songs were removed
-                    from
-                    Soundcloud under a copy right claim, these can be listened to via the alterative links on the <a
-                        href="tracklist/">track-list</a> page.</p>
-                <div class="soundgrid">
-                    <section id="mixtapeone">
-                        <h2>Mixtape One</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1067066884%3Fsecret_token%3Ds-mFAFnCNg6sN&color=%23202020&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-6712841" title="Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-6712841/sets/mixtape-one-fagan-1com/s-mFAFnCNg6sN"
-                                title="Mixtape One | Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape One | Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapetwo">
-                        <h2>Mixtape Two</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1069995157&color=%23cad4c0&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-6712841" title="Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-6712841/sets/mixtape-two-fagan-1com"
-                                title="Mixtape Two - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Two - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapethree">
-                        <h2>Mixtape Three</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1073662474&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-6712841" title="Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-6712841/sets/mixtape-three-fagan-1com"
-                                title="Mixtape Three - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Three - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapefour">
-                        <h2>Mixtape Four</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1080986968&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-6712841" title="Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-6712841/sets/mixtape-four-fagan-1com"
-                                title="Mixtape Four - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Four - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapefive">
-                        <h2>Mixtape Five <i class="fa fa-info-circle" style="cursor: pointer;" title="Mixtape Five was reduced on Soundcloud due to copyright claims, check the track-list page for alternative listening options."rel="tooltip"></i></h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1094383126&color=%23ac0c0b&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-five-fagan-1com"
-                                title="Mixtape Five - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Five - Fagan-1.Com</a>
-                        </div><br>
-                    </section><br>
-                    <section id="mixtapesix">
-                        <h2>Mixtape Six</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1096761310%3Fsecret_token%3Ds-PgyjLXobkfP&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-6-the-kadz-tape-fagan-1com/s-PgyjLXobkfP"
-                                title="Mixtape 6 - The Kadz Tape - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape 6 - The Kadz Tape -
-                                Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapeseven">
-                        <h2>Mixtape Seven</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1145743228&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-seven-fagan-1com"
-                                title="Mixtape Seven - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Seven - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapeeight">
-                        <h2>Mixtape Eight</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1192039354&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-eight-fagan-1com"
-                                title="Mixtape Eight - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Eight - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapenine">
-                        <h2>Mixtape Nine</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1201399474&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com"
-                                title="Mixtape Nine - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Nine - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <section id="mixtapeten">
-                        <h2>Mixtape Ten</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1242074968&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-                        <div
-                            style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;">
-                            <a href="https://soundcloud.com/user-932503264-699697848" title="Fagan-1.Com"
-                                target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a
-                                href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com"
-                                title="Mixtape Nine - Fagan-1.Com" target="_blank"
-                                style="color: #cccccc; text-decoration: none;">Mixtape Nine - Fagan-1.Com</a>
-                        </div>
-                    </section><br>
-                    <br>
-                    <section id="mixtapeeleven">
-                        <h2>Mixtape Eleven</h2>
-                        <iframe width="100%" height="450" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1258395127%3Fsecret_token%3Ds-tsm9wyzdML7&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/user-694208966" title="Fagan-1.Com" target="_blank" style="color: #cccccc; text-decoration: none;">Fagan-1.Com</a> · <a href="https://soundcloud.com/user-694208966/sets/mixtape-eleven-fagan-1com/s-tsm9wyzdML7" title="Mixtape Eleven - Fagan-1.Com" target="_blank" style="color: #cccccc; text-decoration: none;">Mixtape Eleven - Fagan-1.Com</a></div>
-                    </section>
-                </div> <!--End of gridish div-->
-            </div> <!--End of inner div-->
+        <div class="page-hero">
+            <h1>The <em>Mixtapes</em></h1>
+            <p>Listen on SoundCloud &mdash; 11 volumes</p>
+        </div>
 
+        <!-- Mixtape grid -->
+        <div class="mixtape-grid">
 
-
-
-        </section>
-        <section class="wrapper">
-            <div class="inner">
-                <ul class="actions">
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="GJ9RZZ466JDY2" />
-                        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif" border="0"
-                            name="submit" title="PayPal - The safer, easier way to pay online!"
-                            alt="Donate with PayPal button" />
-                        <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1"
-                            height="1" />
-                    </form>
-                    <li><a href="../requests.html" class="button">Go to request page</a></li>
-                </ul>
+            <div class="glass-card mixtape-card" id="mixtapeone">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 01</div>
+                        <div class="mixtape-title">Mixtape One</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1067066884%3Fsecret_token%3Ds-mFAFnCNg6sN&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-6712841/sets/mixtape-one-fagan-1com/s-mFAFnCNg6sN" target="_blank">Mixtape One | Fagan-1.Com</a>
+                </div>
             </div>
-        </section>
-    </div>
+
+            <div class="glass-card mixtape-card" id="mixtapetwo">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 02</div>
+                        <div class="mixtape-title">Mixtape Two</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1069995157&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-6712841/sets/mixtape-two-fagan-1com" target="_blank">Mixtape Two - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapethree">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 03</div>
+                        <div class="mixtape-title">Mixtape Three</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1073662474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-6712841/sets/mixtape-three-fagan-1com" target="_blank">Mixtape Three - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapefour">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 04</div>
+                        <div class="mixtape-title">Mixtape Four</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1080986968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-6712841/sets/mixtape-four-fagan-1com" target="_blank">Mixtape Four - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapefive">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 05</div>
+                        <div class="mixtape-title">Mixtape Five</div>
+                    </div>
+                    <div class="copyright-note">
+                        <i class="fa fa-info-circle"></i> Partial — copyright
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1094383126&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-five-fagan-1com" target="_blank">Mixtape Five - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapesix">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 06</div>
+                        <div class="mixtape-title">Mixtape Six — The Kadz Tape</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1096761310%3Fsecret_token%3Ds-PgyjLXobkfP&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-6-the-kadz-tape-fagan-1com/s-PgyjLXobkfP" target="_blank">Mixtape 6 - The Kadz Tape</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapeseven">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 07</div>
+                        <div class="mixtape-title">Mixtape Seven</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1145743228&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-seven-fagan-1com" target="_blank">Mixtape Seven - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapeeight">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 08</div>
+                        <div class="mixtape-title">Mixtape Eight</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1192039354&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-eight-fagan-1com" target="_blank">Mixtape Eight - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapenine">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 09</div>
+                        <div class="mixtape-title">Mixtape Nine — The DJ W Tape</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1201399474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com" target="_blank">Mixtape Nine - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapeten">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 10</div>
+                        <div class="mixtape-title">Mixtape Ten</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1242074968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com" target="_blank">Mixtape Ten - Fagan-1.Com</a>
+                </div>
+            </div>
+
+            <div class="glass-card mixtape-card" id="mixtapeeleven">
+                <div class="mixtape-card-head">
+                    <div>
+                        <div class="mixtape-num">Volume 11</div>
+                        <div class="mixtape-title">Mixtape Eleven</div>
+                    </div>
+                </div>
+                <iframe class="mixtape-player" height="166" scrolling="no" frameborder="no" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1258395127%3Fsecret_token%3Ds-tsm9wyzdML7&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="sc-attr">
+                    <a href="https://soundcloud.com/user-694208966" target="_blank">Fagan-1.Com</a> &middot;
+                    <a href="https://soundcloud.com/user-694208966/sets/mixtape-eleven-fagan-1com/s-tsm9wyzdML7" target="_blank">Mixtape Eleven - Fagan-1.Com</a>
+                </div>
+            </div>
+
+        </div>
+        <!-- /mixtape-grid -->
+
+        <!-- Support strip -->
+        <div class="support-strip">
+            <p>Enjoyed the music?</p>
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="display:inline">
+                <input type="hidden" name="cmd" value="_s-xclick" />
+                <input type="hidden" name="hosted_button_id" value="GJ9RZZ466JDY2" />
+                <button type="submit" class="pill-btn" style="cursor:pointer; font-family:inherit;">
+                    <i class="fa fa-heart"></i> Donate via PayPal
+                </button>
+            </form>
+        </div>
+
+    </main>
 
     <!-- Footer -->
-    <footer id="footer" class="wrapper alt">
-        <div class="inner">
-            <ul class="menu">
-                <li>&copy; David Fagan. All rights reserved.</li>
-                <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
-                <li><a href="/assets/docs/cookies.html" target="_blank">Cookie Policy</a></li>
-                <li><a href="/assets/docs/privacy.html" target="_blank">Privacy Policy</a></li>
-            </ul>
-        </div>
+    <footer class="site-footer">
+        <span>&copy; David Fagan. All rights reserved.</span>
+        <a href="/assets/docs/cookies.html" target="_blank">Cookie Policy</a>
+        <a href="/assets/docs/privacy.html" target="_blank">Privacy Policy</a>
     </footer>
 
-    <!-- Scripts -->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/jquery.scrollex.min.js"></script>
-    <script src="/assets/js/jquery.scrolly.min.js"></script>
-    <script src="/assets/js/browser.min.js"></script>
-    <script src="/assets/js/breakpoints.min.js"></script>
-    <script src="/assets/js/util.js"></script>
-    <script src="/assets/js/main.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script src="/assets/js/tooltip.js"></script>
-    <!-- Vertical ad -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3755930033410564" data-ad-slot="8750553256"
-        data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <!-- Background engine -->
+    <script src="/assets/js/bg.js"></script>
     <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        BgEngine.init({
+            NEBULA_OPACITY:  0.04,   /* slightly dimmer — content is the focus */
+            ORB_OPACITY:     0.07,
+            CARD_ID:         null    /* no card tilt on content pages */
+        });
     </script>
-</body>
 
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" type="text/css" href="//wpcc.io/lib/1.0.2/cookieconsent.min.css" />
+    <script src="//wpcc.io/lib/1.0.2/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+            window.wpcc.init({
+                "border": "thin", "corners": "small",
+                "colors": {
+                    "popup":  { "background": "#0a0a0a", "text": "#ccff00", "border": "#ccff00" },
+                    "button": { "background": "#ccff00", "text": "#000000" }
+                },
+                "transparency": "10",
+                "content": { "href": "https://fagan-1.com/assets/docs/cookies.html" },
+                "position": "bottom-right"
+            });
+        });
+    </script>
+
+    <!-- AdSense -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3755930033410564"
+        data-ad-slot="8750553256" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+</body>
 </html>
