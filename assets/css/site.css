@@ -15,6 +15,8 @@
     --card-bg:     rgba(6, 6, 6, 0.65);
     --card-border: rgba(204, 255, 0, 0.13);
     --header-h:    56px;
+    --font-mono:   ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono',
+                   Menlo, Consolas, monospace;
 }
 
 /* ---- Reset ---- */
@@ -50,6 +52,25 @@ body {
     pointer-events: none;
 }
 
+/* ---- HUD grid overlay (above canvas, below content) ----
+   Faint accent grid that fades out towards the bottom of the
+   viewport — gives the pages a technical, holographic depth. */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(204, 255, 0, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(204, 255, 0, 0.028) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 0%,
+        #000 0%, transparent 78%);
+    mask-image: radial-gradient(ellipse 95% 85% at 50% 0%,
+        #000 0%, transparent 78%);
+}
+
 /* ================================================================
    SITE HEADER
    ================================================================ */
@@ -69,6 +90,10 @@ body {
 }
 
 .site-header .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.16em;
@@ -79,6 +104,22 @@ body {
     transition: opacity 0.2s;
 }
 .site-header .brand:hover { opacity: 0.7; }
+
+/* Live status dot */
+.site-header .brand::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(204, 255, 0, 0.9);
+    animation: pulse-dot 2.6s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1;    transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(0.8); }
+}
 
 .site-header nav {
     display: flex;
@@ -91,7 +132,9 @@ body {
 .site-header nav::-webkit-scrollbar { display: none; }
 
 .site-header nav a {
-    font-size: 11.5px;
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.50);
@@ -105,7 +148,20 @@ body {
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
 }
-.site-header nav a.active { color: var(--accent); }
+.site-header nav a.active {
+    color: var(--accent);
+    text-shadow: 0 0 14px rgba(204, 255, 0, 0.4);
+}
+.site-header nav a.active::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    right: 11px;
+    bottom: 1px;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
+}
 
 /* Separator dot */
 .site-header .sep {
@@ -136,6 +192,26 @@ body {
     animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
 
+/* Mono kicker line above the h1 — "// SOUND ARCHIVE" style */
+.page-hero .kicker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(204, 255, 0, 0.65);
+    margin-bottom: 16px;
+}
+.page-hero .kicker::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(204, 255, 0, 0.7);
+}
+
 .page-hero h1 {
     font-size: clamp(28px, 5vw, 48px);
     font-weight: 700;
@@ -148,10 +224,12 @@ body {
 .page-hero h1 em {
     color: var(--accent);
     font-style: normal;
+    text-shadow: 0 0 32px rgba(204, 255, 0, 0.45);
 }
 
 .page-hero p {
-    font-size: 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
     color: var(--text-dim);
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -180,6 +258,37 @@ body {
         transparent, rgba(204, 255, 0, 0.35), transparent);
     pointer-events: none;
 }
+
+/* HUD viewfinder corner ticks — brighten on hover */
+.glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    pointer-events: none;
+    opacity: 0.22;
+    transition: opacity 0.35s;
+    background-image:
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent));
+    background-position:
+        0 0,       0 0,
+        100% 0,    100% 0,
+        0 100%,    0 100%,
+        100% 100%, 100% 100%;
+    background-size:
+        12px 1px, 1px 12px,
+        12px 1px, 1px 12px,
+        12px 1px, 1px 12px,
+        12px 1px, 1px 12px;
+    background-repeat: no-repeat;
+}
+.glass-card:hover::after { opacity: 0.65; }
 
 /* ================================================================
    BODY TEXT (general prose inside cards)
@@ -210,6 +319,8 @@ body {
    PILL BUTTON (shared across pages)
    ================================================================ */
 .pill-btn {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -218,7 +329,8 @@ body {
     border: 1px solid rgba(204, 255, 0, 0.28);
     border-radius: 100px;
     color: var(--accent);
-    font-size: 12.5px;
+    font-family: var(--font-mono);
+    font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -238,6 +350,25 @@ body {
     box-shadow: 0 6px 22px rgba(204, 255, 0, 0.16);
 }
 
+/* Scanning sheen sweep on hover */
+.pill-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -60%;
+    width: 40%;
+    background: linear-gradient(105deg,
+        transparent, rgba(255, 255, 255, 0.14), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+}
+.pill-btn:hover::after {
+    animation: sheen-sweep 0.7s ease forwards;
+}
+@keyframes sheen-sweep {
+    to { left: 130%; }
+}
+
 /* ================================================================
    SITE FOOTER
    ================================================================ */
@@ -251,7 +382,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px 28px;
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
     color: var(--text-dim);
     letter-spacing: 0.08em;
     text-transform: uppercase;

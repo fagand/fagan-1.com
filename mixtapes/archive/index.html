@@ -43,6 +43,41 @@
         #header { display: none; }  /* replaced by .site-header below */
         #wrapper { position: relative; z-index: 10; }
         #footer  { display: none; }  /* replaced by .site-footer below */
+
+        /* Always-dark: the rest of the site ignores the OS colour scheme,
+           so pin faq.css's light-mode variables to their dark values. */
+        :root {
+            --navBackgroundColour: #101400;
+            --navInactiveTextColour: rgba(204, 255, 0, 0.4);
+            --navInactiveTextHoverColour: rgba(204, 255, 0);
+            --linestartcolor: rgba(204, 255, 0, 0.50);
+            --mainbgcolor: #000;
+            --bodyTextColour: #fff;
+            --bodyHeadingColour: #ccff00;
+            --midsectioncolor: #000;
+            --footercolor: #101400;
+            --sectionscolor: #000;
+            --white: #fff;
+            --black: #fff;
+            --white015percent: rgba(255, 255, 255, 0.25);
+            --white55percent: rgba(255, 255, 255, 0.55);
+            --formBorderColour: rgba(204, 255, 0, 0.4);
+            --formBorderColourFocus: rgba(255, 255, 255, 0.8);
+            --buttonHoverColour: rgba(204, 255, 0, 0.65);
+            --aElementborderBottomColour: #ccff00;
+            --aElementHoverColour: #ccff00;
+        }
+
+        /* Let the starfield show through the main panel */
+        #main.wrapper.style1 { background-color: rgba(6, 6, 6, 0.55); }
+
+        /* Search input — match the glass design system */
+        #myInput {
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(204, 255, 0, 0.25);
+            border-radius: 10px;
+            color: #fff;
+        }
     </style>
 </head>
 
