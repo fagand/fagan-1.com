@@ -30,8 +30,25 @@ and 1px glow lines. Strategy: **restrained** — black surface, one accent ≤10
 - UI/body: `-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif`
 - Mono voice (kickers, nav, badges, footer): `ui-monospace, 'SF Mono', … monospace`,
   10–13px, uppercase, letter-spacing 0.05–0.24em
+- **Heritage display: `Atak`** (`assets/fonts/atak.woff2`, 27KB + .ttf fallback) — the
+  site's original 2006 dripping-graffiti font. Used for the homepage hero wordmark, era
+  years, rail volume numbers and the footer wordmark. `--font-atak`, `font-display: swap`,
+  preloaded. Glyphs drip below the baseline — reserve `padding-bottom` under it.
 - Page h1: `clamp(28px, 5vw, 48px)`, weight 700, -0.025em, `em` = accent with glow
 - Body: 14.5px / 1.78
+
+## Homepage (index.html) — scroll story
+
+Single long-scroll "keynote", not the old centred card. Four scenes driven by one rAF
+loop (`transform`/`opacity` only; disabled under `prefers-reduced-motion`):
+1. **Pinned hero** — ATAK wordmark advances toward the viewer and dissolves.
+2. **The story** — a vertical era timeline of the site's real screenshots
+   (`assets/img/eras/era1–5.jpg`, 2006 → final), each in a browser-chrome frame that
+   drifts sideways + scales as it passes centre; a giant outlined ATAK year parallaxes behind.
+3. **Pinned mixtape rail** — 11 volume cards sweep right→left; each carries its SoundCloud
+   artwork (`assets/img/mixtapes/1–10.jpg`) under a scrim with a dripping ATAK number;
+   volume 11 (no art) uses an accent-gradient fallback.
+4. **Closing CTA** — "Access the music" → /mixtapes/, quick links, footer.
 
 ## Components
 
