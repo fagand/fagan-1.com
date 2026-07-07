@@ -624,6 +624,45 @@
            ============================================================ */
         [data-fx], [data-era-shot], [data-era-copy] { will-change: transform, opacity; }
 
+        /* ============================================================
+           HIDDEN SPARKLE — a stray twinkle that drifts to a new spot
+           every few seconds. Whoever finds and clicks it lands on the
+           motivation page. Small, quiet, discoverable.
+           ============================================================ */
+        .sparkle {
+            position: fixed;
+            z-index: 45;
+            width: 22px;
+            height: 22px;
+            display: block;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 1.1s ease, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;         /* only clickable while lit */
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sparkle.lit {
+            opacity: 0.82;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .sparkle svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            fill: var(--accent);
+            filter: drop-shadow(0 0 6px rgba(204, 255, 0, 0.85));
+            animation: sparkle-twinkle 3.4s ease-in-out infinite;
+        }
+        .sparkle:hover { opacity: 1; transform: scale(1.4); }
+        .sparkle:hover svg { filter: drop-shadow(0 0 13px rgba(204, 255, 0, 1)); }
+
+        @keyframes sparkle-twinkle {
+            0%, 100% { transform: rotate(0deg)  scale(0.85); }
+            50%      { transform: rotate(90deg) scale(1.12); }
+        }
+
         @media (max-width: 720px) {
             .era {
                 grid-template-columns: 1fr !important;
@@ -640,6 +679,8 @@
             html { scroll-behavior: auto; }
             .hero-scroll-cue::after { animation: none; }
             .hud-brand::before { animation: none; }
+            .sparkle svg { animation: none; }
+            .sparkle { transition: opacity 0.4s ease; }
             /* the engine bails out on this query and applies no transforms */
         }
     </style>
@@ -889,6 +930,13 @@
 
     </main>
 
+    <!-- Hidden sparkle → motivation page (moves around; find it if you can) -->
+    <a href="/motivation.html" class="sparkle" id="sparkle" aria-label="A wee something">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 0c.7 6.3 5.4 11 11.7 11.7-.1.2-.2.4-.4.6C17.2 13 12.7 17.6 12 24c-.7-6.4-5.2-11-11.3-11.7-.2-.2-.3-.4-.4-.6C6.6 11 11.3 6.3 12 0z"/>
+        </svg>
+    </a>
+
     <!-- Ambient starfield (calmed down — the scroll does the talking) -->
     <script src="assets/js/bg.js"></script>
     <script>
@@ -1004,6 +1052,40 @@
             requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
+    })();
+    </script>
+
+    <!-- ============================================================
+         SPARKLE — relocates to a random viewport spot, lights up,
+         lingers, fades, then jumps somewhere new. Clicking it (while
+         lit) opens the motivation page. Kept clear of the corner HUD.
+         ============================================================ -->
+    <script>
+    (function () {
+        var s = document.getElementById('sparkle');
+        if (!s) return;
+
+        function place() {
+            /* central band so it dodges the fixed brand/CTA corners */
+            s.style.left = (7 + Math.random() * 82).toFixed(2) + 'vw';
+            s.style.top  = (14 + Math.random() * 70).toFixed(2) + 'vh';
+        }
+
+        function cycle() {
+            place();
+            requestAnimationFrame(function () { s.classList.add('lit'); });
+            /* stay lit 5–8s, then fade out and reappear elsewhere */
+            setTimeout(function () {
+                s.classList.remove('lit');
+                setTimeout(cycle, 1300);
+            }, 5000 + Math.random() * 3000);
+        }
+
+        /* don't steal attention from the hero — arrive after a beat */
+        setTimeout(cycle, 3000);
+
+        /* keep the current sparkle lit a little longer when hovered */
+        s.addEventListener('mouseenter', function () { s.classList.add('lit'); });
     })();
     </script>
 

@@ -5,10 +5,14 @@
     <title>Motivation | fagan-1.com</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Experimental page — keep out of search until it graduates -->
-    <meta name="robots" content="noindex">
     <meta name="author" content="David Fagan">
     <meta name="description" content="One random motivation clip. No algorithm.">
+    <!-- Open Graph -->
+    <meta property="og:site_name"   content="fagan-1.com">
+    <meta property="og:title"       content="Motivation | fagan-1.com">
+    <meta property="og:url"         content="https://www.fagan-1.com/motivation.html">
+    <meta property="og:type"        content="website">
+    <meta property="og:description" content="One random motivation clip. No algorithm.">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -287,7 +291,7 @@
 
     <!-- bottom overlay: controls -->
     <div class="ov ov-bottom" id="ov-bottom">
-        <span class="page-tag"><em>Experiment 001</em> &middot; one random clip &middot; no algorithm</span>
+        <span class="page-tag"><em>Motivation</em> &middot; one random clip &middot; no algorithm &middot; click to unmute</span>
         <button class="deck-btn" id="btn-play" aria-label="Pause">&#10074;&#10074; Pause</button>
         <button class="deck-btn" id="btn-mute" aria-label="Turn sound on">&#128263; Sound on</button>
         <button class="deck-btn" id="btn-next" aria-label="Next clip">Next &#9654;</button>
@@ -452,11 +456,12 @@
             if (v.paused) { tryPlay(v); } else { v.pause(); setPlayUi(false); }
         });
 
-        btnMute.addEventListener('click', function () {
+        function toggleMute() {
             muted = !muted;
             vids.forEach(function (v) { v.muted = muted; });
             setMuteUi();
-        });
+        }
+        btnMute.addEventListener('click', toggleMute);
 
         btnNext.addEventListener('click', next);
         overlay.addEventListener('click', function () { tryPlay(vids[live]); });
@@ -512,14 +517,10 @@
             ovTop.classList.add('show');
             ovBottom.classList.add('show');
         } else if (coarse) {
-            /* touch: tap anywhere on the video toggles the HUD */
+            /* touch: tap the video to unmute (or mute) and summon the controls */
             stage.addEventListener('click', function () {
-                if (ovBottom.classList.contains('show')) {
-                    ovTop.classList.remove('show');
-                    ovBottom.classList.remove('show');
-                } else {
-                    reveal('both');
-                }
+                toggleMute();
+                reveal('both');
             });
         } else {
             /* desktop: edge proximity */
@@ -538,10 +539,9 @@
                 }, 2600);
             }, { passive: true });
 
-            /* click on the raw video = play/pause, like a cinema screen */
+            /* click the video to unmute (or mute again) — sound button stays in sync */
             stage.addEventListener('click', function () {
-                var v = vids[live];
-                if (v.paused) { tryPlay(v); } else { v.pause(); setPlayUi(false); }
+                toggleMute();
                 reveal('bottom');
             });
         }
