@@ -328,9 +328,58 @@
         initStars();
         initNebulae();
         initOrbs();
+
+        /* Reduced motion: paint one static frame, skip all animation loops */
+        var reduceMotion = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) {
+            CFG.SHOOT_STARS   = false;
+            CFG.NEBULA_BREATHE = false;
+            drawStatic();
+            window.addEventListener('resize', function () {
+                resize(); initStars(); drawStatic();
+            }, { passive: true });
+            return;
+        }
+
         nextShoot = Date.now() + rand(2500, 5000);  /* first shot arrives quickly */
         requestAnimationFrame(draw);
         requestAnimationFrame(tiltLoop);
+
+        /* single still frame for reduced-motion users */
+        function drawStatic() {
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, W, H);
+            nebulae.forEach(function (n) {
+                var nx = n.x * W, ny = n.y * H, rw = n.rx * W;
+                ctx.save();
+                ctx.translate(nx, ny);
+                ctx.scale(1, n.ry / n.rx);
+                var g = ctx.createRadialGradient(0, 0, 0, 0, 0, rw);
+                g.addColorStop(0, rgba(n.c, n.op));
+                g.addColorStop(1, rgba(n.c, 0));
+                ctx.beginPath(); ctx.arc(0, 0, rw, 0, Math.PI * 2);
+                ctx.fillStyle = g; ctx.fill();
+                ctx.restore();
+            });
+            orbs.forEach(function (o) {
+                var ox = o.x * W, oy = o.y * H;
+                var g  = ctx.createRadialGradient(ox, oy, 0, ox, oy, o.r);
+                g.addColorStop(0, rgba(CFG.ACCENT, o.op));
+                g.addColorStop(1, rgba(CFG.ACCENT, 0));
+                ctx.beginPath(); ctx.arc(ox, oy, o.r, 0, Math.PI * 2);
+                ctx.fillStyle = g; ctx.fill();
+            });
+            layers.forEach(function (layer) {
+                layer.stars.forEach(function (s) {
+                    ctx.beginPath();
+                    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = rgba(s.colour, s.alpha * 0.75);
+                    ctx.fill();
+                });
+            });
+        }
     }
 
 })(window);
