@@ -142,6 +142,33 @@
             border: none;
         }
 
+        /* ---- Deferred player facade (replaced by the iframe on scroll or click) ---- */
+        .mixtape-facade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: radial-gradient(circle at 50% 42%, rgba(204,255,0,0.05), transparent 60%),
+                        rgba(255,255,255,0.02);
+        }
+
+        .facade-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(204,255,0,0.6);
+            transition: color 0.3s;
+        }
+
+        .mixtape-facade:hover .facade-label,
+        .mixtape-facade:focus-visible .facade-label {
+            color: var(--accent);
+        }
+
         .sc-attr {
             padding: 10px 20px 14px;
             font-size: 10px;
@@ -219,8 +246,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1067066884%3Fsecret_token%3Ds-mFAFnCNg6sN&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape One — SoundCloud player"
+                    data-title="Mixtape One — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1067066884%3Fsecret_token%3Ds-mFAFnCNg6sN&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-6712841/sets/mixtape-one-fagan-1com/s-mFAFnCNg6sN" target="_blank">Mixtape One | Fagan-1.Com</a>
@@ -235,8 +266,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1069995157&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Two — SoundCloud player"
+                    data-title="Mixtape Two — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1069995157&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-6712841/sets/mixtape-two-fagan-1com" target="_blank">Mixtape Two - Fagan-1.Com</a>
@@ -251,8 +286,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1073662474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Three — SoundCloud player"
+                    data-title="Mixtape Three — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1073662474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-6712841/sets/mixtape-three-fagan-1com" target="_blank">Mixtape Three - Fagan-1.Com</a>
@@ -267,8 +306,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1080986968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Four — SoundCloud player"
+                    data-title="Mixtape Four — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1080986968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-6712841" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-6712841/sets/mixtape-four-fagan-1com" target="_blank">Mixtape Four - Fagan-1.Com</a>
@@ -286,8 +329,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1094383126&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Five — SoundCloud player"
+                    data-title="Mixtape Five — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1094383126&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-five-fagan-1com" target="_blank">Mixtape Five - Fagan-1.Com</a>
@@ -302,8 +349,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1096761310%3Fsecret_token%3Ds-PgyjLXobkfP&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Six — The Kadz Tape — SoundCloud player"
+                    data-title="Mixtape Six — The Kadz Tape — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1096761310%3Fsecret_token%3Ds-PgyjLXobkfP&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-6-the-kadz-tape-fagan-1com/s-PgyjLXobkfP" target="_blank">Mixtape 6 - The Kadz Tape</a>
@@ -318,8 +369,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1145743228&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Seven — SoundCloud player"
+                    data-title="Mixtape Seven — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1145743228&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-seven-fagan-1com" target="_blank">Mixtape Seven - Fagan-1.Com</a>
@@ -334,8 +389,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1192039354&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Eight — SoundCloud player"
+                    data-title="Mixtape Eight — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1192039354&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-eight-fagan-1com" target="_blank">Mixtape Eight - Fagan-1.Com</a>
@@ -350,8 +409,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1201399474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Nine — The DJ W Tape — SoundCloud player"
+                    data-title="Mixtape Nine — The DJ W Tape — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1201399474&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com" target="_blank">Mixtape Nine - Fagan-1.Com</a>
@@ -366,8 +429,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1242074968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Ten — SoundCloud player"
+                    data-title="Mixtape Ten — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1242074968&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-932503264-699697848" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-932503264-699697848/sets/mixtape-nine-fagan-1com" target="_blank">Mixtape Ten - Fagan-1.Com</a>
@@ -382,8 +449,12 @@
                     </div>
                     <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
                 </div>
-                <iframe class="mixtape-player" height="450" scrolling="no" frameborder="no" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1258395127%3Fsecret_token%3Ds-tsm9wyzdML7&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+                <div class="mixtape-player mixtape-facade" role="button" tabindex="0"
+                    aria-label="Load Mixtape Eleven — SoundCloud player"
+                    data-title="Mixtape Eleven — SoundCloud player"
+                    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1258395127%3Fsecret_token%3Ds-tsm9wyzdML7&color=%23ccff00&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+                    <span class="facade-label"><i class="fa fa-play" aria-hidden="true"></i> Load player</span>
+                </div>
                 <div class="sc-attr">
                     <a href="https://soundcloud.com/user-694208966" target="_blank">Fagan-1.Com</a> &middot;
                     <a href="https://soundcloud.com/user-694208966/sets/mixtape-eleven-fagan-1com/s-tsm9wyzdML7" target="_blank">Mixtape Eleven - Fagan-1.Com</a>
@@ -413,6 +484,50 @@
         <a href="/assets/docs/cookies.html" target="_blank">Cookie Policy</a>
         <a href="/assets/docs/privacy.html" target="_blank">Privacy Policy</a>
     </footer>
+
+    <!-- Deferred SoundCloud players: inject each iframe when its card nears the
+         viewport (or on click/Enter as a fallback) so page load stays light -->
+    <script>
+        (function () {
+            function inject(facade) {
+                if (facade.dataset.loaded) return;
+                facade.dataset.loaded = "1";
+                var frame = document.createElement("iframe");
+                frame.className = "mixtape-player";
+                frame.height = "450";
+                frame.scrolling = "no";
+                frame.frameBorder = "no";
+                frame.allow = "autoplay";
+                frame.loading = "lazy";
+                frame.title = facade.dataset.title;
+                frame.src = facade.dataset.src;
+                facade.replaceWith(frame);
+            }
+
+            var facades = Array.prototype.slice.call(document.querySelectorAll(".mixtape-facade"));
+
+            facades.forEach(function (facade) {
+                facade.addEventListener("click", function () { inject(facade); });
+                facade.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inject(facade); }
+                });
+            });
+
+            if ("IntersectionObserver" in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            io.unobserve(entry.target);
+                            inject(entry.target);
+                        }
+                    });
+                }, { rootMargin: "300px 0px" });
+                facades.forEach(function (facade) { io.observe(facade); });
+            } else {
+                facades.forEach(inject);
+            }
+        })();
+    </script>
 
     <!-- Background engine -->
     <script src="/assets/js/bg.js"></script>
