@@ -17,104 +17,148 @@
     <link rel="mask-icon"    href="/favicon/safari-pinned-tab.svg" color="#ccff00">
     <link rel="shortcut icon" href="/favicon/favicon.ico">
     <meta name="theme-color" content="#000">
-    <!-- Shared design system -->
-    <link rel="stylesheet" href="/assets/css/site.css" />
 
     <style>
-        /* ---- Player frame ---- */
-        .player-card {
-            padding: 0;
-            opacity: 0;
-            animation: fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        /* ============================================================
+           MOTIVATION — full-bleed cinema mode.
+           The video IS the page; nav and controls live on overlays
+           that materialise when the cursor comes near them (top or
+           bottom edge), or on tap for touch devices.
+           ============================================================ */
+        :root {
+            --accent:    #ccff00;
+            --text-dim:  rgba(255, 255, 255, 0.45);
+            --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono',
+                         Menlo, Consolas, monospace;
         }
 
-        /* Fixed-height stage: portrait and landscape clips letterbox inside it,
-           so swapping videos never shifts the layout. */
-        .player-stage {
-            position: relative;
-            width: 100%;
-            height: clamp(380px, 68vh, 720px);
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
             background: #000;
-            overflow: hidden;
-            cursor: pointer;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+                         'Segoe UI', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;   /* the video is the page — nothing scrolls */
         }
 
-        .player-stage video {
+        /* ---- full-viewport stage ---- */
+        .stage {
+            position: fixed;
+            inset: 0;
+        }
+        .stage.hide-cursor { cursor: none; }
+
+        .stage video {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;      /* fill the page, crop as needed */
             opacity: 0;
-            transition: opacity 0.45s ease;
+            transition: opacity 0.5s ease;
         }
-        .player-stage video.live { opacity: 1; }
+        .stage video.live { opacity: 1; }
 
-        /* Tap-to-play overlay — shown when autoplay is blocked or reduced motion */
-        .play-overlay {
-            position: absolute;
-            inset: 0;
-            z-index: 3;
-            display: none;
+        /* ============================================================
+           OVERLAYS — hidden by default, slide in from their edge.
+           .show is applied by the proximity/touch logic.
+           ============================================================ */
+        .ov {
+            position: fixed;
+            left: 0; right: 0;
+            z-index: 5;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .ov.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: none !important;
+        }
+
+        /* --- top: nav --- */
+        .ov-top {
+            top: 0;
+            transform: translateY(-14px);
+            padding: 18px max(20px, 4vw) 46px;
+            background: linear-gradient(to bottom,
+                rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.35) 55%, transparent);
+            display: flex;
             align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.45);
-            border: none;
-            width: 100%;
-            cursor: pointer;
+            gap: 18px;
         }
-        .play-overlay.show { display: flex; }
 
-        .play-overlay span {
+        .ov-top .brand {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 9px;
             font-family: var(--font-mono);
             font-size: 12px;
-            letter-spacing: 0.18em;
+            font-weight: 600;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
             color: var(--accent);
-            padding: 12px 26px;
-            border: 1px solid rgba(204, 255, 0, 0.45);
-            border-radius: 100px;
-            background: rgba(0, 0, 0, 0.72);
-            box-shadow: 0 0 30px rgba(204, 255, 0, 0.18);
+            text-decoration: none;
         }
-
-        /* Thin progress bar along the bottom edge of the stage */
-        .progress-track {
-            position: absolute;
-            left: 0; right: 0; bottom: 0;
-            height: 2px;
-            z-index: 2;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .progress-fill {
-            height: 100%;
-            width: 100%;
+        .ov-top .brand::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
             background: var(--accent);
-            box-shadow: 0 0 8px rgba(204, 255, 0, 0.7);
-            transform: scaleX(0);
-            transform-origin: left;
+            box-shadow: 0 0 8px rgba(204, 255, 0, 0.9);
         }
 
-        /* ---- Control deck ---- */
-        .deck {
+        .ov-top nav {
+            display: flex;
+            gap: 2px;
+            margin-left: auto;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .ov-top nav::-webkit-scrollbar { display: none; }
+
+        .ov-top nav a {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            transition: color 0.2s, background 0.2s;
+        }
+        .ov-top nav a:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+        .ov-top nav a.active {
+            color: var(--accent);
+            text-shadow: 0 0 14px rgba(204, 255, 0, 0.4);
+        }
+
+        /* --- bottom: control deck --- */
+        .ov-bottom {
+            bottom: 0;
+            transform: translateY(14px);
+            padding: 60px max(20px, 4vw) 22px;
+            background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.38) 55%, transparent);
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            padding: 14px 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .deck-btn {
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            padding: 8px 16px;
-            background: rgba(204, 255, 0, 0.06);
-            border: 1px solid rgba(204, 255, 0, 0.24);
+            padding: 9px 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(204, 255, 0, 0.3);
             border-radius: 100px;
             color: var(--accent);
             font-family: var(--font-mono);
@@ -123,11 +167,13 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             transition: background 0.25s, border-color 0.25s, color 0.2s;
         }
         .deck-btn:hover {
-            background: rgba(204, 255, 0, 0.13);
-            border-color: rgba(204, 255, 0, 0.5);
+            background: rgba(204, 255, 0, 0.14);
+            border-color: rgba(204, 255, 0, 0.55);
             color: #fff;
         }
         .deck-btn:focus-visible {
@@ -145,62 +191,91 @@
             letter-spacing: 0.12em;
             color: var(--text-dim);
         }
-        .deck-meta .clock  { font-variant-numeric: tabular-nums; }
-        .deck-meta .count  { color: rgba(204, 255, 0, 0.6); }
+        .deck-meta .clock { font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.75); }
+        .deck-meta .count { color: rgba(204, 255, 0, 0.65); }
 
-        /* Muted badge pulses gently to invite the unmute tap */
-        .deck-btn[data-muted="true"] {
-            animation: nudge 2.6s ease-in-out infinite;
-        }
-        @keyframes nudge {
-            0%, 100% { border-color: rgba(204, 255, 0, 0.24); }
-            50%      { border-color: rgba(204, 255, 0, 0.6); }
-        }
-
-        /* Hint line under the card */
-        .keys-hint {
-            margin-top: 14px;
+        .page-tag {
             font-family: var(--font-mono);
             font-size: 10px;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--text-dim);
-            opacity: 0;
-            animation: fade-in 1s ease 1.1s forwards;
+            flex-basis: 100%;
+            margin-bottom: 2px;
         }
-        .keys-hint kbd {
-            font-family: inherit;
-            color: rgba(204, 255, 0, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 4px;
-            padding: 1px 6px;
-            margin: 0 2px;
+        .page-tag em { color: var(--accent); font-style: normal; }
+
+        /* --- progress: always visible, hugs the bottom edge --- */
+        .progress-track {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            height: 3px;
+            z-index: 6;
+            background: rgba(255, 255, 255, 0.10);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 100%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(204, 255, 0, 0.8);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        /* --- centre: tap to play (autoplay blocked / reduced motion) --- */
+        .play-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 7;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.45);
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+        .play-overlay.show { display: flex; }
+        .play-overlay span {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: 13px 28px;
+            border: 1px solid rgba(204, 255, 0, 0.45);
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.72);
+            box-shadow: 0 0 34px rgba(204, 255, 0, 0.18);
         }
 
         @media (max-width: 640px) {
-            .player-stage { height: clamp(320px, 58vh, 560px); }
-            .deck { padding: 12px 14px; }
+            .ov-top { padding: 14px 16px 40px; }
+            .ov-bottom { padding: 52px 16px 18px; gap: 8px; }
+            .deck-btn { padding: 8px 14px; }
             .deck-meta { gap: 10px; }
-            .keys-hint { display: none; }  /* no keyboard on touch */
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .page-hero, .player-card, .keys-hint {
-                animation: none;
-                opacity: 1;
-            }
-            .player-stage video { transition: none; }
-            .deck-btn[data-muted="true"] { animation: none; }
+            .ov { transition: none; }
+            .stage video { transition: none; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Header -->
-    <header class="site-header">
+    <div class="stage" id="stage">
+        <video id="vidA" playsinline muted preload="auto"></video>
+        <video id="vidB" playsinline muted preload="none"></video>
+    </div>
+
+    <!-- top overlay: nav -->
+    <header class="ov ov-top" id="ov-top">
         <a href="/index.html" class="brand">Fagan-1.com</a>
-        <div class="sep"></div>
         <nav>
             <a href="/index.html">Home</a>
             <a href="/mixtapes/">The Mixtapes</a>
@@ -210,49 +285,35 @@
         </nav>
     </header>
 
-    <main class="page-wrap">
-
-        <div class="page-hero">
-            <div class="kicker">Experiment 001 // Video</div>
-            <h1>Daily <em>Motivation</em></h1>
-            <p>One random clip. No algorithm.</p>
+    <!-- bottom overlay: controls -->
+    <div class="ov ov-bottom" id="ov-bottom">
+        <span class="page-tag"><em>Experiment 001</em> &middot; one random clip &middot; no algorithm</span>
+        <button class="deck-btn" id="btn-play" aria-label="Pause">&#10074;&#10074; Pause</button>
+        <button class="deck-btn" id="btn-mute" aria-label="Turn sound on">&#128263; Sound on</button>
+        <button class="deck-btn" id="btn-next" aria-label="Next clip">Next &#9654;</button>
+        <div class="deck-meta">
+            <span class="clock" id="clock">0:00 / 0:00</span>
+            <span class="count" id="count">&ndash; / &ndash;</span>
         </div>
+    </div>
 
-        <div class="glass-card player-card">
-            <div class="player-stage" id="stage">
-                <video id="vidA" playsinline muted preload="auto"></video>
-                <video id="vidB" playsinline muted preload="none"></video>
-                <button class="play-overlay" id="play-overlay" aria-label="Play video">
-                    <span>&#9654; Tap to play</span>
-                </button>
-                <div class="progress-track" aria-hidden="true">
-                    <div class="progress-fill" id="progress"></div>
-                </div>
-            </div>
-            <div class="deck">
-                <button class="deck-btn" id="btn-play" aria-label="Pause">&#10074;&#10074; Pause</button>
-                <button class="deck-btn" id="btn-mute" data-muted="true" aria-label="Turn sound on">&#128263; Sound on</button>
-                <button class="deck-btn" id="btn-next" aria-label="Next clip">Next &#9654;</button>
-                <div class="deck-meta">
-                    <span class="clock" id="clock">0:00 / 0:00</span>
-                    <span class="count" id="count">&ndash; / &ndash;</span>
-                </div>
-            </div>
+    <button class="play-overlay" id="play-overlay" aria-label="Play video">
+        <span>&#9654; Tap to play</span>
+    </button>
+
+    <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <noscript>
+        <div style="position:fixed; inset:0; z-index:20; background:#000; padding:20px; overflow:auto;">
+            <p style="margin:0 0 12px; font-family:var(--font-mono); color:#ccff00;">
+                JavaScript is off — here's a clip the old-fashioned way:
+                <a href="/index.html" style="color:#fff;">back home</a></p>
+            <video src="/assets/vids/motiv-01.mp4" poster="/assets/vids/motiv-01.jpg"
+                   controls playsinline style="width:100%; max-height:80vh;"></video>
         </div>
-
-        <p class="keys-hint">
-            <kbd>space</kbd> play &middot; <kbd>m</kbd> sound &middot; <kbd>n</kbd> next
-        </p>
-
-        <noscript>
-            <div class="glass-card" style="padding:20px; margin-top:20px;">
-                <p style="margin:0 0 12px;">JavaScript is off — here's a clip the old-fashioned way:</p>
-                <video src="/assets/vids/motiv-01.mp4" poster="/assets/vids/motiv-01.jpg"
-                       controls playsinline style="width:100%; max-height:70vh;"></video>
-            </div>
-        </noscript>
-
-    </main>
+    </noscript>
 
     <script>
     (function () {
@@ -269,6 +330,9 @@
         ];
 
         var vids     = [document.getElementById('vidA'), document.getElementById('vidB')];
+        var stage    = document.getElementById('stage');
+        var ovTop    = document.getElementById('ov-top');
+        var ovBottom = document.getElementById('ov-bottom');
         var overlay  = document.getElementById('play-overlay');
         var progress = document.getElementById('progress');
         var clock    = document.getElementById('clock');
@@ -276,21 +340,22 @@
         var btnPlay  = document.getElementById('btn-play');
         var btnMute  = document.getElementById('btn-mute');
         var btnNext  = document.getElementById('btn-next');
-        var stage    = document.getElementById('stage');
 
         var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var coarse        = window.matchMedia('(pointer: coarse)').matches;
         var saveData      = navigator.connection && navigator.connection.saveData;
 
-        /* Shuffle bag: play all 7 in random order before any repeat */
+        /* ==========================================================
+           PLAYER — shuffle bag + double buffer (standby element
+           preloads the next clip so swaps are instant)
+           ========================================================== */
         var order = CLIPS.map(function (_, i) { return i; });
         for (var i = order.length - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
             var t = order[i]; order[i] = order[j]; order[j] = t;
         }
 
-        var pos    = 0;      /* index into order[] */
-        var live   = 0;      /* which <video> is on screen */
-        var muted  = true;
+        var pos = 0, live = 0, muted = true;
 
         function clip(p) { return CLIPS[order[((p % order.length) + order.length) % order.length]]; }
 
@@ -300,10 +365,8 @@
             return m + ':' + (r < 10 ? '0' : '') + r;
         }
 
-        /* Double-buffer: the hidden element preloads the next clip while
-           the visible one plays, so "next" swaps instantly. */
         function preloadStandby() {
-            if (saveData) return;                 /* respect Data Saver */
+            if (saveData) return;
             var v = vids[1 - live];
             var c = clip(pos + 1);
             v.preload = 'auto';
@@ -318,14 +381,6 @@
             clock.textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
         }
 
-        function tryPlay(v) {
-            var p = v.play();
-            if (p && p.catch) {
-                p.then(function () { overlay.classList.remove('show'); setPlayUi(true); })
-                 .catch(function () { overlay.classList.add('show');   setPlayUi(false); });
-            }
-        }
-
         function setPlayUi(playing) {
             btnPlay.innerHTML = playing ? '&#10074;&#10074; Pause' : '&#9654; Play';
             btnPlay.setAttribute('aria-label', playing ? 'Pause' : 'Play');
@@ -334,7 +389,15 @@
         function setMuteUi() {
             btnMute.innerHTML = muted ? '&#128263; Sound on' : '&#128266; Sound off';
             btnMute.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off');
-            btnMute.setAttribute('data-muted', muted ? 'true' : 'false');
+        }
+
+        function tryPlay(v) {
+            v.muted = muted;   /* re-sync right before play — autoplay needs it true */
+            var p = v.play();
+            if (p && p.catch) {
+                p.then(function () { overlay.classList.remove('show'); setPlayUi(true); })
+                 .catch(function () { overlay.classList.add('show');   setPlayUi(false); });
+            }
         }
 
         function show(idx, autoplay) {
@@ -345,8 +408,6 @@
             progress.style.transform = 'scaleX(0)';
             updateHud();
             if (autoplay) tryPlay(v);
-            /* pause + unload the off-screen element once the swap settles,
-               then point it at the clip after this one */
             o.pause();
             preloadStandby();
         }
@@ -355,7 +416,6 @@
             pos++;
             var standby = 1 - live;
             var c = clip(pos);
-            /* if the standby buffer wasn't prefetched (Data Saver), load now */
             if (vids[standby].src.indexOf(c.src) === -1) {
                 vids[standby].poster = c.poster;
                 vids[standby].src    = c.src;
@@ -364,9 +424,8 @@
             show(live, true);
         }
 
-        /* ---- wire events on both buffers ---- */
         vids.forEach(function (v) {
-            /* our `muted` state is authoritative — some environments reset
+            /* our muted state is authoritative — some environments reset
                the property, and autoplay depends on it being true */
             v.addEventListener('volumechange', function () {
                 if (v.muted !== muted) v.muted = muted;
@@ -374,6 +433,10 @@
             v.addEventListener('ended', function () {
                 if (v === vids[live]) next();
             });
+            /* keep the button label true even if the browser itself
+               pauses/resumes playback (background tab, PiP, etc.) */
+            v.addEventListener('play',  function () { if (v === vids[live]) setPlayUi(true);  });
+            v.addEventListener('pause', function () { if (v === vids[live] && !v.ended) setPlayUi(false); });
             v.addEventListener('timeupdate', function () {
                 if (v !== vids[live] || !isFinite(v.duration)) return;
                 progress.style.transform = 'scaleX(' + (v.currentTime / v.duration) + ')';
@@ -396,31 +459,102 @@
         });
 
         btnNext.addEventListener('click', next);
-
         overlay.addEventListener('click', function () { tryPlay(vids[live]); });
-
-        stage.addEventListener('click', function (e) {
-            if (e.target === overlay || overlay.contains(e.target)) return;
-            var v = vids[live];
-            if (v.paused) { tryPlay(v); } else { v.pause(); setPlayUi(false); }
-        });
 
         document.addEventListener('keydown', function (e) {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            if (e.code === 'Space')      { e.preventDefault(); btnPlay.click(); }
-            else if (e.key === 'm')      { btnMute.click(); }
-            else if (e.key === 'n')      { btnNext.click(); }
+            if (e.code === 'Space')  { e.preventDefault(); btnPlay.click(); }
+            else if (e.key === 'm')  { btnMute.click(); }
+            else if (e.key === 'n')  { btnNext.click(); }
+            reveal('both');          /* any key wakes the HUD */
         });
 
-        /* Pause when the tab is hidden; resume when it's back */
         document.addEventListener('visibilitychange', function () {
             var v = vids[live];
             if (document.hidden) { if (!v.paused) { v.pause(); v._wasPlaying = true; } }
             else if (v._wasPlaying) { v._wasPlaying = false; tryPlay(v); }
+            /* opened in a background tab: start once the tab becomes visible */
+            else if (!reducedMotion && v.paused && overlay.classList.contains('show')) tryPlay(v);
+        });
+
+        /* ==========================================================
+           PROXIMITY HUD
+           Desktop: each overlay materialises when the cursor enters
+           its edge zone and dissolves when it leaves. The cursor
+           itself hides after idling mid-screen.
+           Touch: a tap summons both overlays; they sleep after 3.5s.
+           Keyboard: focusing any control keeps its overlay awake.
+           ========================================================== */
+        var TOP_ZONE = 150, BOTTOM_ZONE = 200, IDLE_MS = 1800, TOUCH_MS = 3500;
+        var hideTimer = { top: null, bottom: null }, cursorTimer = null;
+
+        function reveal(which, sticky) {
+            if (which === 'top' || which === 'both') wake(ovTop, 'top', sticky);
+            if (which === 'bottom' || which === 'both') wake(ovBottom, 'bottom', sticky);
+        }
+
+        function wake(el, key, sticky) {
+            el.classList.add('show');
+            clearTimeout(hideTimer[key]);
+            if (!sticky) hideTimer[key] = setTimeout(function () { sleep(el); }, coarse ? TOUCH_MS : IDLE_MS);
+        }
+
+        function sleep(el) {
+            /* never hide an overlay the keyboard is inside */
+            if (el.contains(document.activeElement)) return;
+            /* keep controls up while paused — you're clearly fiddling */
+            if (el === ovBottom && vids[live].paused) return;
+            el.classList.remove('show');
+        }
+
+        if (reducedMotion) {
+            /* no proximity games: HUD stays put */
+            ovTop.classList.add('show');
+            ovBottom.classList.add('show');
+        } else if (coarse) {
+            /* touch: tap anywhere on the video toggles the HUD */
+            stage.addEventListener('click', function () {
+                if (ovBottom.classList.contains('show')) {
+                    ovTop.classList.remove('show');
+                    ovBottom.classList.remove('show');
+                } else {
+                    reveal('both');
+                }
+            });
+        } else {
+            /* desktop: edge proximity */
+            window.addEventListener('mousemove', function (e) {
+                var y = e.clientY, h = window.innerHeight;
+                if (y < TOP_ZONE)          reveal('top', true);
+                else if (ovTop.classList.contains('show')) wake(ovTop, 'top');       /* left the zone → start the clock */
+                if (y > h - BOTTOM_ZONE)   reveal('bottom', true);
+                else if (ovBottom.classList.contains('show')) wake(ovBottom, 'bottom');
+
+                stage.classList.remove('hide-cursor');
+                clearTimeout(cursorTimer);
+                cursorTimer = setTimeout(function () {
+                    /* only vanish the cursor when it's parked mid-screen */
+                    if (y > TOP_ZONE && y < h - BOTTOM_ZONE) stage.classList.add('hide-cursor');
+                }, 2600);
+            }, { passive: true });
+
+            /* click on the raw video = play/pause, like a cinema screen */
+            stage.addEventListener('click', function () {
+                var v = vids[live];
+                if (v.paused) { tryPlay(v); } else { v.pause(); setPlayUi(false); }
+                reveal('bottom');
+            });
+        }
+
+        /* keyboard users: overlays wake when tabbed into and stay awake */
+        [ovTop, ovBottom].forEach(function (el) {
+            el.addEventListener('focusin',  function () { el.classList.add('show'); });
+            el.addEventListener('focusout', function () {
+                if (!reducedMotion) wake(el, el === ovTop ? 'top' : 'bottom');
+            });
         });
 
         /* ---- boot ---- */
-        /* the muted attribute isn't reliably reflected to the property — set it */
         vids.forEach(function (v) { v.muted = true; });
         var first = clip(0);
         vids[0].poster = first.poster;
@@ -430,11 +564,11 @@
         updateHud();
 
         if (reducedMotion) {
-            /* respect the setting: paint the poster, wait for the tap */
             overlay.classList.add('show');
             setPlayUi(false);
         } else {
             tryPlay(vids[0]);
+            reveal('both');   /* introduce the HUD once, then it sleeps */
         }
         preloadStandby();
     })();
