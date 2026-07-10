@@ -256,16 +256,96 @@
             box-shadow: 0 0 34px rgba(204, 255, 0, 0.18);
         }
 
+        /* ============================================================
+           UNMUTE CUE — a soft "click for sound" nudge that floats in
+           once the muted clip is playing, then bows out. Purely
+           decorative (pointer-events:none), so a click lands on the
+           video beneath it and unmutes as normal.
+           ============================================================ */
+        .unmute-cue {
+            position: fixed;
+            left: 50%;
+            bottom: 19%;
+            z-index: 4;                       /* under the HUD + progress bar */
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 22px 11px 13px;
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(204, 255, 0, 0.34);
+            backdrop-filter: blur(16px) saturate(150%);
+            -webkit-backdrop-filter: blur(16px) saturate(150%);
+            box-shadow: 0 10px 44px rgba(0, 0, 0, 0.55),
+                        0 0 30px rgba(204, 255, 0, 0.10);
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, 14px);
+            transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .unmute-cue.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+            animation: cue-bob 3.4s ease-in-out infinite 0.7s;
+        }
+
+        /* round icon badge with pulsing sonar rings */
+        .unmute-badge {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+        .unmute-badge svg {
+            position: relative;
+            z-index: 1;
+            width: 17px;
+            height: 17px;
+            fill: var(--accent);
+            filter: drop-shadow(0 0 5px rgba(204, 255, 0, 0.55));
+        }
+        .unmute-ring {
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            border: 1px solid rgba(204, 255, 0, 0.55);
+            opacity: 0;
+        }
+        .unmute-cue.show .unmute-ring { animation: cue-ripple 2.4s ease-out infinite; }
+        .unmute-cue.show .unmute-ring:nth-child(2) { animation-delay: 1.2s; }
+
+        @keyframes cue-ripple {
+            0%   { transform: scale(0.55); opacity: 0.85; }
+            80%  { opacity: 0; }
+            100% { transform: scale(2.4);  opacity: 0; }
+        }
+        @keyframes cue-bob {
+            0%, 100% { transform: translate(-50%, 0); }
+            50%      { transform: translate(-50%, -5px); }
+        }
+
         @media (max-width: 640px) {
             .ov-top { padding: 14px 16px 40px; }
             .ov-bottom { padding: 52px 16px 18px; gap: 8px; }
             .deck-btn { padding: 8px 14px; }
             .deck-meta { gap: 10px; }
+            .unmute-cue { bottom: 24%; font-size: 11px; padding: 10px 18px 10px 12px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             .ov { transition: none; }
             .stage video { transition: none; }
+            .unmute-cue { transition: opacity 0.3s ease; }
+            .unmute-cue.show { animation: none; transform: translate(-50%, 0); }
+            .unmute-cue.show .unmute-ring { animation: none; opacity: 0.5; }
         }
     </style>
 </head>
@@ -305,6 +385,18 @@
         <span>&#9654; Tap to play</span>
     </button>
 
+    <!-- "click for sound" nudge (shown once, over the muted clip) -->
+    <div class="unmute-cue" id="unmute-cue" aria-hidden="true">
+        <span class="unmute-badge">
+            <span class="unmute-ring"></span>
+            <span class="unmute-ring"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/>
+            </svg>
+        </span>
+        <span class="unmute-label">Click for sound</span>
+    </div>
+
     <div class="progress-track" aria-hidden="true">
         <div class="progress-fill" id="progress"></div>
     </div>
@@ -323,14 +415,19 @@
     (function () {
         'use strict';
 
+        /* The clip list between the two BUILD:CLIPS markers is rewritten
+           automatically by assets/vids/build.sh — don't hand-edit it. */
         var CLIPS = [
+            /* BUILD:CLIPS:START */
             { src: '/assets/vids/motiv-01.mp4', poster: '/assets/vids/motiv-01.jpg' },
             { src: '/assets/vids/motiv-02.mp4', poster: '/assets/vids/motiv-02.jpg' },
             { src: '/assets/vids/motiv-03.mp4', poster: '/assets/vids/motiv-03.jpg' },
             { src: '/assets/vids/motiv-04.mp4', poster: '/assets/vids/motiv-04.jpg' },
             { src: '/assets/vids/motiv-05.mp4', poster: '/assets/vids/motiv-05.jpg' },
             { src: '/assets/vids/motiv-06.mp4', poster: '/assets/vids/motiv-06.jpg' },
-            { src: '/assets/vids/motiv-07.mp4', poster: '/assets/vids/motiv-07.jpg' }
+            { src: '/assets/vids/motiv-07.mp4', poster: '/assets/vids/motiv-07.jpg' },
+            { src: '/assets/vids/motiv-08.mp4', poster: '/assets/vids/motiv-08.jpg' }
+            /* BUILD:CLIPS:END */
         ];
 
         var vids     = [document.getElementById('vidA'), document.getElementById('vidB')];
@@ -344,6 +441,7 @@
         var btnPlay  = document.getElementById('btn-play');
         var btnMute  = document.getElementById('btn-mute');
         var btnNext  = document.getElementById('btn-next');
+        var cue      = document.getElementById('unmute-cue');
 
         var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var coarse        = window.matchMedia('(pointer: coarse)').matches;
@@ -395,12 +493,32 @@
             btnMute.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off');
         }
 
+        /* ---- unmute cue: a one-time "click for sound" nudge ---- */
+        var cueDone = false, cueTimer = null;
+        if (cue) cue.querySelector('.unmute-label').textContent = coarse ? 'Tap for sound' : 'Click for sound';
+        function showCue() {
+            if (!cue || cueDone || !muted) return;
+            cueDone = true;                       /* one graceful appearance only */
+            cue.classList.add('show');
+            cueTimer = setTimeout(hideCue, 7000); /* then it bows out on its own */
+        }
+        function hideCue() {
+            if (!cue) return;
+            cue.classList.remove('show');
+            clearTimeout(cueTimer);
+            cueDone = true;
+        }
+
         function tryPlay(v) {
             v.muted = muted;   /* re-sync right before play — autoplay needs it true */
             var p = v.play();
             if (p && p.catch) {
-                p.then(function () { overlay.classList.remove('show'); setPlayUi(true); })
-                 .catch(function () { overlay.classList.add('show');   setPlayUi(false); });
+                p.then(function () {
+                    overlay.classList.remove('show');
+                    setPlayUi(true);
+                    if (muted) showCue();          /* nudge only while there's no sound */
+                })
+                 .catch(function () { overlay.classList.add('show'); setPlayUi(false); });
             }
         }
 
@@ -460,6 +578,7 @@
             muted = !muted;
             vids.forEach(function (v) { v.muted = muted; });
             setMuteUi();
+            if (!muted) hideCue();   /* sound's on — retire the nudge */
         }
         btnMute.addEventListener('click', toggleMute);
 
