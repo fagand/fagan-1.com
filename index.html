@@ -647,20 +647,75 @@
             transform: scale(1);
             pointer-events: auto;
         }
+        /* soft breathing halo behind the star — draws the eye without shouting */
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 300%;
+            height: 300%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(204, 255, 0, 0.28) 0%,
+                rgba(204, 255, 0, 0.08) 38%,
+                transparent 68%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .sparkle.lit::before { animation: sparkle-halo 3.2s ease-in-out infinite; }
+
         .sparkle svg {
             display: block;
             width: 100%;
             height: 100%;
             fill: var(--accent);
-            filter: drop-shadow(0 0 6px rgba(204, 255, 0, 0.85));
+            filter: drop-shadow(0 0 6px rgba(204, 255, 0, 0.9));
             animation: sparkle-twinkle 3.4s ease-in-out infinite;
         }
-        .sparkle:hover { opacity: 1; transform: scale(1.4); }
-        .sparkle:hover svg { filter: drop-shadow(0 0 13px rgba(204, 255, 0, 1)); }
+        .sparkle:hover { opacity: 1; transform: scale(1.45); }
+        .sparkle:hover svg { filter: drop-shadow(0 0 14px rgba(204, 255, 0, 1)); }
+
+        /* ---- drifting dust motes ---- */
+        .sparkle .motes {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .sparkle .motes i {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 4px rgba(204, 255, 0, 0.9);
+            opacity: 0;
+        }
+        /* motes only breathe while the star is lit (saves work when hidden) */
+        .sparkle.lit .motes i { animation: mote-drift var(--dur, 4.6s) ease-in-out infinite var(--delay, 0s); }
+        .sparkle .motes i:nth-child(1) { --dx: -15px; --dy: -11px; --dur: 4.2s; --delay: 0s;    }
+        .sparkle .motes i:nth-child(2) { --dx:  13px; --dy: -15px; --dur: 5.1s; --delay: 0.7s;  width: 1.5px; height: 1.5px; }
+        .sparkle .motes i:nth-child(3) { --dx:  17px; --dy:   7px; --dur: 4.7s; --delay: 1.5s;  }
+        .sparkle .motes i:nth-child(4) { --dx: -13px; --dy:  13px; --dur: 5.5s; --delay: 2.2s;  width: 1.5px; height: 1.5px; }
+        .sparkle .motes i:nth-child(5) { --dx:   5px; --dy: -17px; --dur: 4.0s; --delay: 3.0s;  }
+        .sparkle .motes i:nth-child(6) { --dx: -17px; --dy:   3px; --dur: 5.3s; --delay: 3.6s;  width: 1.5px; height: 1.5px; }
 
         @keyframes sparkle-twinkle {
             0%, 100% { transform: rotate(0deg)  scale(0.85); }
             50%      { transform: rotate(90deg) scale(1.12); }
+        }
+        @keyframes sparkle-halo {
+            0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.85); }
+            50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.15); }
+        }
+        @keyframes mote-drift {
+            0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            25%  { opacity: 0.9; }
+            100% { opacity: 0; transform: translate(-50%, -50%)
+                                translate(var(--dx, 0), var(--dy, 0)) scale(1); }
         }
 
         @media (max-width: 720px) {
@@ -681,6 +736,8 @@
             .hud-brand::before { animation: none; }
             .sparkle svg { animation: none; }
             .sparkle { transition: opacity 0.4s ease; }
+            .sparkle.lit::before { animation: none; opacity: 0.7; }
+            .sparkle.lit .motes i { animation: none; }
             /* the engine bails out on this query and applies no transforms */
         }
     </style>
@@ -932,6 +989,7 @@
 
     <!-- Hidden sparkle → motivation page (moves around; find it if you can) -->
     <a href="/motivation.html" class="sparkle" id="sparkle" aria-label="A wee something">
+        <span class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
         <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 0c.7 6.3 5.4 11 11.7 11.7-.1.2-.2.4-.4.6C17.2 13 12.7 17.6 12 24c-.7-6.4-5.2-11-11.3-11.7-.2-.2-.3-.4-.4-.6C6.6 11 11.3 6.3 12 0z"/>
         </svg>
