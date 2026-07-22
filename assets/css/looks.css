@@ -63,6 +63,13 @@
     --accent: #cbb8ff; --accent-rgb: 200, 180, 255; --accent-text-rgb: 203, 184, 255;
     --accent-grad: linear-gradient(100deg,
         #b7ffd8, #a9e0ff, #cbb8ff, #f4b8e6, #d8ffb0, #b7ffd8);
+    /* glow stops — same colours as --accent-grad, at ~em-glow softness, so
+       the drifting halo tracks the text's own gradient (see prism-glow). */
+    --pg1: rgba(183, 255, 216, 0.5);   /* #b7ffd8 */
+    --pg2: rgba(169, 224, 255, 0.5);   /* #a9e0ff */
+    --pg3: rgba(203, 184, 255, 0.5);   /* #cbb8ff */
+    --pg4: rgba(244, 184, 230, 0.5);   /* #f4b8e6 */
+    --pg5: rgba(216, 255, 176, 0.5);   /* #d8ffb0 */
 }
 
 /* =====================================================================
@@ -110,6 +117,12 @@
     --card-border: rgba(120, 100, 170, 0.24);
     --accent-grad: linear-gradient(100deg,
         #2f6a4f, #2c5f8a, #5a4b8a, #7a3d6a, #4a5d2f, #2f6a4f);
+    /* glow stops mirror the light gradient's darker jewel tones */
+    --pg1: rgba(47, 106, 79, 0.5);     /* #2f6a4f */
+    --pg2: rgba(44, 95, 138, 0.5);     /* #2c5f8a */
+    --pg3: rgba(90, 75, 138, 0.5);     /* #5a4b8a */
+    --pg4: rgba(122, 61, 106, 0.5);    /* #7a3d6a */
+    --pg5: rgba(74, 93, 47, 0.5);      /* #4a5d2f */
 }
 
 /* Sub-page HUD chrome — flip the dark header bar to a light, translucent
@@ -140,11 +153,24 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    text-shadow: none;
-    animation: prism-drift 9s linear infinite;
+    /* declared value = the static fallback when motion is reduced; while
+       running, prism-glow steps this through the same stops as the text's
+       gradient. --pg* swap per theme so it tracks each variant's grad. */
+    text-shadow: 0 0 46px var(--pg1);
+    animation: prism-drift 9s linear infinite,
+               prism-glow  9s linear infinite;
 }
 @keyframes prism-drift {
     to { background-position: 220% center; }
+}
+/* drifting halo — cycles the glow colour through --accent-grad's stops,
+   sharing prism-drift's 9s linear timeline so the two stay in phase. */
+@keyframes prism-glow {
+    0%, 100% { text-shadow: 0 0 46px var(--pg1); }
+    20%      { text-shadow: 0 0 46px var(--pg2); }
+    40%      { text-shadow: 0 0 46px var(--pg3); }
+    60%      { text-shadow: 0 0 46px var(--pg4); }
+    80%      { text-shadow: 0 0 46px var(--pg5); }
 }
 
 @media (prefers-reduced-motion: reduce) {

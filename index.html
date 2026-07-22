@@ -232,6 +232,14 @@
                so the sub-line never collides with the paint runs */
             padding-bottom: 0.42em;
         }
+        /* Light mode: the dark depth-glow above turns to muddy dark-on-dark
+           against the light page, so swap it for a soft halo pulled from the
+           active look's own background token — the wordmark reads as sitting
+           in a clean light pocket. Dark mode keeps the rule above unchanged;
+           the em keeps its accent glow (set below). */
+        :root[data-theme="light"] .hero-word {
+            text-shadow: 0 0 60px color-mix(in srgb, var(--bg) 88%, transparent);
+        }
         .hero-word em {
             font-style: normal;
             color: var(--accent);
