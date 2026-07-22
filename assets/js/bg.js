@@ -6,15 +6,19 @@
      2. Include this script
      3. Call BgEngine.init({ ...optional config overrides... })
 
-   ----------------------------------------------------------------
-   CONFIG REFERENCE — override any of these in your init() call:
+   LIVE LOOK-SWITCHING:
+     BgEngine.setLook({ ...overrides... })  swaps colours / effect flags
+     WITHOUT starting a second animation loop. Exactly one rAF draw loop
+     ever runs. theme.js drives this to change the backdrop per "look".
 
+   ----------------------------------------------------------------
+   CONFIG REFERENCE — override any of these in init()/setLook():
+
+   BG_FILL            css col  : base canvas fill. Default '#000'.
+                                 (theme.js feeds it the palette's --bg)
    MOUSE_STRENGTH     (0–1)    : parallax intensity. Default 0.9
    MOUSE_EASE         (0–1)    : tracking lag. Lower = snappier.
    CARD_ID            string   : element id to apply 3D tilt to.
-                                  null = no tilt.
-   CARD_TILT_DEG      (0–12)   : max tilt degrees. Default 5.
-   CARD_TILT_EASE     (0–1)    : tilt smoothing. Default 0.07.
 
    NEBULA_COUNT       int      : number of fog blobs. Default 4.
    NEBULA_OPACITY     (0–0.2)  : blob brightness. Default 0.055.
@@ -25,23 +29,26 @@
    ORB_OPACITY        (0–0.2)  : orb brightness. Default 0.10.
    ORB_RADIUS         [min,max]: orb size px. Default [180,280].
 
-   STAR_LAYERS        array    : three depth layers, each has:
-     count    — star density
-     parallax — px shift on mouse (near = higher)
-     sizeMin/Max — dot radius range
+   STAR_LAYERS        array    : depth layers { count, parallax,
+                                 sizeMin, sizeMax }.
 
    CURSOR_SPOT        bool     : cursor spotlight. Default true.
-   CURSOR_SPOT_R      px       : spotlight radius. Default 420.
-   CURSOR_SPOT_OP     (0–0.2)  : spotlight centre opacity. Default 0.045.
-
    SHOOT_STARS        bool     : occasional shooting stars. Default true.
    SHOOT_MIN/MAX      ms       : interval range. Default 4500–9000.
+
+   ---- per-look effect flags ----
+   PARTICLE_DRIFT     float    : multiplies star drift. Default 1. (Abyss)
+   AURORA             bool     : tall, slow nebula curtains. (Aurora)
+   HUE_CYCLE          float    : nebula hue rotation speed. 0 = off. (Prism)
+
+   ACCENT / STAR_TINTS / NEBULA_COLS — rgb arrays for the palette.
    ================================================================= */
 (function (global) {
     'use strict';
 
     /* ---- Defaults ---- */
     var DEFAULT = {
+        BG_FILL:         '#000000',
         MOUSE_STRENGTH:  0.9,
         MOUSE_EASE:      0.06,
         CARD_ID:         null,
@@ -71,25 +78,85 @@
         SHOOT_MIN:       4500,
         SHOOT_MAX:       9000,
 
+        PARTICLE_DRIFT:  1,
+        AURORA:          false,
+        HUE_CYCLE:       0,
+
+        /* per-look signature effects (all optional / off by default) */
+        PARTICLES:       null,   /* {count,color,mode:'rise'|'drift',speed,sizeMin,sizeMax,glow} */
+        CURTAINS:        null,   /* {count,colors,speed,opacity}  — aurora light columns        */
+        WASH:            null,   /* {speed,opacity}               — slow full-screen hue wash    */
+        SHOOT_COLOR:     [255, 255, 255],
+
         ACCENT:      [204, 255, 0],
         STAR_TINTS:  [[255,255,255],[210,228,255],[204,255,0]],
         NEBULA_COLS: [[204,255,0],[0,220,160],[90,60,240],[204,255,0]]
     };
 
+    var booted = false;   /* guards against a second rAF loop */
+
     /* ---- Public API ---- */
     global.BgEngine = {
         init: function (opts) {
+            if (booted) { if (this._apply) this._apply(opts || {}); return; }
             var CFG = {}, k;
             for (k in DEFAULT) CFG[k] = DEFAULT[k];
             if (opts) for (k in opts) CFG[k] = opts[k];
             _boot(CFG);
-        }
+        },
+        /* Change the look live. Never starts a new loop. */
+        setLook: function (opts) {
+            if (!booted) { this.init(opts); return; }
+            if (this._apply) this._apply(opts || {});
+        },
+        _apply: null,
+        _getCfg: null   /* returns a snapshot of the live config (theme.js reads
+                           the page-level density so look switches can restore it) */
     };
+
+    /* ---- colour helpers ---- */
+    function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+
+    function rgbToHsl(c) {
+        var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255;
+        var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+        var h = 0, s = 0, l = (mx + mn) / 2;
+        if (mx !== mn) {
+            var d = mx - mn;
+            s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+            if (mx === r)      h = (g - b) / d + (g < b ? 6 : 0);
+            else if (mx === g) h = (b - r) / d + 2;
+            else               h = (r - g) / d + 4;
+            h /= 6;
+        }
+        return [h, s, l];
+    }
+    function hslToRgb(h, s, l) {
+        h = ((h % 1) + 1) % 1;
+        var r, g, b;
+        if (s === 0) { r = g = b = l; }
+        else {
+            var hue2rgb = function (p, q, t) {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+            };
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1 / 3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1 / 3);
+        }
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
 
     /* ---- Engine ---- */
     function _boot(CFG) {
         var canvas = document.getElementById('bg-canvas');
         if (!canvas) return;
+        booted = true;
         var ctx  = canvas.getContext('2d');
         var card = CFG.CARD_ID ? document.getElementById(CFG.CARD_ID) : null;
 
@@ -98,12 +165,15 @@
         var mouseAlive = false;
         var tiltX = 0, tiltY = 0;
         var layers = [], nebulae = [], orbs = [], shooters = [];
+        var particles = [], curtains = [];
         var nextShoot = 0;
         var t0 = Date.now();
 
+        var reduceMotion = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         function rand(a, b) { return a + Math.random() * (b - a); }
         function pick(arr)  { return arr[Math.floor(Math.random() * arr.length)]; }
-        function rgba(c, a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
 
         /* ---- resize ---- */
         function resize() {
@@ -115,6 +185,7 @@
 
         /* ---- stars ---- */
         function initStars() {
+            var drift = CFG.PARTICLE_DRIFT || 1;
             layers = CFG.STAR_LAYERS.map(function (cfg) {
                 var stars = [];
                 for (var i = 0; i < cfg.count; i++) {
@@ -125,8 +196,8 @@
                         alpha:  rand(0.35, 1.0),
                         twk:    rand(0.003, 0.009),
                         twkOff: rand(0, Math.PI * 2),
-                        dx:     rand(-4e-5, 4e-5),
-                        dy:     rand(-3e-5, 3e-5),
+                        dx:     rand(-4e-5, 4e-5) * drift,
+                        dy:     rand(-3e-5, 3e-5) * drift,
                         colour: pick(CFG.STAR_TINTS)
                     });
                 }
@@ -136,14 +207,19 @@
 
         /* ---- nebulae ---- */
         function initNebulae() {
-            nebulae = CFG.NEBULA_COLS.slice(0, CFG.NEBULA_COUNT).map(function (c) {
+            var cols = CFG.NEBULA_COLS.slice(0, CFG.NEBULA_COUNT);
+            nebulae = cols.map(function (c) {
+                var rx = CFG.AURORA ? rand(0.34, 0.6)  : rand(0.28, 0.52);
+                var ry = CFG.AURORA ? rand(0.55, 0.95) : rand(0.22, 0.42);
+                var dscale = CFG.AURORA ? 0.5 : 1;
                 return {
                     x: Math.random(), y: Math.random(),
-                    rx: rand(0.28, 0.52), ry: rand(0.22, 0.42),
-                    dx: rand(-CFG.NEBULA_DRIFT, CFG.NEBULA_DRIFT),
-                    dy: rand(-CFG.NEBULA_DRIFT * 0.7, CFG.NEBULA_DRIFT * 0.7),
-                    c:  c,
-                    op: rand(0.025, CFG.NEBULA_OPACITY),
+                    rx: rx, ry: ry,
+                    dx: rand(-CFG.NEBULA_DRIFT, CFG.NEBULA_DRIFT) * dscale,
+                    dy: rand(-CFG.NEBULA_DRIFT * 0.7, CFG.NEBULA_DRIFT * 0.7) * dscale,
+                    c:   c,
+                    hsl: rgbToHsl(c),
+                    op:  rand(0.025, CFG.NEBULA_OPACITY) * (CFG.AURORA ? 1.5 : 1),
                     breatheOff: rand(0, Math.PI * 2)
                 };
             });
@@ -158,6 +234,45 @@
                     r:  rand(CFG.ORB_RADIUS[0], CFG.ORB_RADIUS[1]),
                     op: rand(0.05, CFG.ORB_OPACITY),
                     px: rand(12, 28)
+                });
+            }
+        }
+
+        /* ---- drifting / rising particles (Abyss bubbles, Ember sparks) ---- */
+        function initParticles() {
+            particles = [];
+            var p = CFG.PARTICLES;
+            if (!p) return;
+            for (var i = 0; i < p.count; i++) {
+                var rise = p.mode === 'rise';
+                particles.push({
+                    x:   Math.random(),
+                    y:   Math.random(),
+                    r:   rand(p.sizeMin || 0.8, p.sizeMax || 2.2),
+                    a:   rand(0.30, 0.85),
+                    tw:  rand(0.004, 0.018),
+                    two: rand(0, Math.PI * 2),
+                    vx:  rand(-4e-5, 4e-5) * (p.speed || 1),
+                    vy:  (rise ? -rand(6e-5, 1.7e-4) : rand(-5e-5, 5e-5)) * (p.speed || 1)
+                });
+            }
+        }
+
+        /* ---- aurora curtains: soft, tall, swaying light columns ---- */
+        function initCurtains() {
+            curtains = [];
+            var c = CFG.CURTAINS;
+            if (!c) return;
+            for (var i = 0; i < c.count; i++) {
+                curtains.push({
+                    baseX: (i + 0.5) / c.count + rand(-0.05, 0.05),
+                    w:     rand(0.10, 0.18),
+                    col:   c.colors[i % c.colors.length],
+                    phase: rand(0, Math.PI * 2),
+                    amp:   rand(0.03, 0.08),
+                    speed: rand(0.05, 0.12) * (c.speed || 1),
+                    op:    (c.opacity || 0.12) * rand(0.75, 1.15),
+                    cy:    rand(0.35, 0.55)
                 });
             }
         }
@@ -178,18 +293,85 @@
             nextShoot = Date.now() + rand(CFG.SHOOT_MIN, CFG.SHOOT_MAX);
         }
 
-        /* ---- main draw loop ---- */
+        /* current nebula colour (hue-cycled for Prism) */
+        function nebColour(n, elapsed) {
+            if (CFG.HUE_CYCLE) {
+                return hslToRgb(n.hsl[0] + elapsed * CFG.HUE_CYCLE, n.hsl[1], n.hsl[2]);
+            }
+            return n.c;
+        }
+
+        /* slow full-screen hue wash (Prism) */
+        function drawWash(elapsed) {
+            if (!CFG.WASH) return;
+            var h = elapsed * (CFG.WASH.speed || 0.02);
+            var op = CFG.WASH.opacity != null ? CFG.WASH.opacity : 0.06;
+            var g = ctx.createLinearGradient(0, 0, W, H);
+            g.addColorStop(0.0, rgba(hslToRgb(h,        0.6, 0.55), op));
+            g.addColorStop(0.5, rgba(hslToRgb(h + 0.16, 0.6, 0.55), op));
+            g.addColorStop(1.0, rgba(hslToRgb(h + 0.33, 0.6, 0.55), op));
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, W, H);
+        }
+
+        /* aurora curtains — soft tall columns that sway sideways */
+        function drawCurtains(elapsed) {
+            if (!CFG.CURTAINS) return;
+            curtains.forEach(function (cu) {
+                var x = (cu.baseX + Math.sin(elapsed * cu.speed + cu.phase) * cu.amp) * W;
+                var breathe = 0.6 + 0.4 * Math.sin(elapsed * 0.3 + cu.phase);
+                var r = cu.w * W;
+                ctx.save();
+                ctx.translate(x, cu.cy * H);
+                ctx.scale(1, 2.6);
+                var g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+                g.addColorStop(0, rgba(cu.col, cu.op * breathe));
+                g.addColorStop(1, rgba(cu.col, 0));
+                ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
+                ctx.fillStyle = g; ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        /* drifting / rising particles (Abyss bubbles, Ember sparks) */
+        function drawParticles(animate) {
+            if (!CFG.PARTICLES) return;
+            var p = CFG.PARTICLES, col = p.color;
+            particles.forEach(function (pt) {
+                if (animate) {
+                    pt.x = (pt.x + pt.vx + 1) % 1;
+                    pt.y = (pt.y + pt.vy + 1) % 1;
+                    pt.two += pt.tw;
+                }
+                var a  = pt.a * (animate ? (0.5 + 0.5 * Math.sin(pt.two)) : 0.8);
+                var px = pt.x * W, py = pt.y * H;
+                if (p.glow) {
+                    var gr = pt.r * 4;
+                    var g  = ctx.createRadialGradient(px, py, 0, px, py, gr);
+                    g.addColorStop(0, rgba(col, a * 0.5));
+                    g.addColorStop(1, rgba(col, 0));
+                    ctx.beginPath(); ctx.arc(px, py, gr, 0, Math.PI * 2);
+                    ctx.fillStyle = g; ctx.fill();
+                }
+                ctx.beginPath(); ctx.arc(px, py, pt.r, 0, Math.PI * 2);
+                ctx.fillStyle = rgba(col, a); ctx.fill();
+            });
+        }
+
+        /* ---- main draw loop (the ONLY rAF draw loop) ---- */
         function draw() {
             ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = '#000';
+            ctx.fillStyle = CFG.BG_FILL || '#000';
             ctx.fillRect(0, 0, W, H);
 
-            /* Smooth mouse */
             mouse.x += (mouse.tx - mouse.x) * CFG.MOUSE_EASE;
             mouse.y += (mouse.ty - mouse.y) * CFG.MOUSE_EASE;
             var mx = (mouse.x / W - 0.5) * CFG.MOUSE_STRENGTH;
             var my = (mouse.y / H - 0.5) * CFG.MOUSE_STRENGTH;
             var elapsed = (Date.now() - t0) * 0.001;
+
+            drawWash(elapsed);
+            drawCurtains(elapsed);
 
             /* --- Nebulae --- */
             nebulae.forEach(function (n) {
@@ -199,13 +381,14 @@
                     ? (0.55 + 0.45 * Math.sin(elapsed * 0.35 + n.breatheOff))
                     : 1;
                 var op = n.op * breathe;
+                var col = nebColour(n, elapsed);
                 var nx = n.x * W, ny = n.y * H, rw = n.rx * W;
                 ctx.save();
                 ctx.translate(nx, ny);
                 ctx.scale(1, n.ry / n.rx);
                 var g = ctx.createRadialGradient(0, 0, 0, 0, 0, rw);
-                g.addColorStop(0, rgba(n.c, op));
-                g.addColorStop(1, rgba(n.c, 0));
+                g.addColorStop(0, rgba(col, op));
+                g.addColorStop(1, rgba(col, 0));
                 ctx.beginPath(); ctx.arc(0, 0, rw, 0, Math.PI * 2);
                 ctx.fillStyle = g; ctx.fill();
                 ctx.restore();
@@ -246,6 +429,9 @@
                 });
             });
 
+            /* --- Particles --- */
+            drawParticles(true);
+
             /* --- Cursor spotlight --- */
             if (CFG.CURSOR_SPOT && mouseAlive) {
                 var sg = ctx.createRadialGradient(
@@ -271,29 +457,31 @@
                     var spd  = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
                     var tx   = s.x - (s.vx / spd) * s.len * s.life;
                     var ty   = s.y - (s.vy / spd) * s.len * s.life;
+                    var sc   = CFG.SHOOT_COLOR;
                     var sg   = ctx.createLinearGradient(tx, ty, s.x, s.y);
-                    sg.addColorStop(0, rgba([255,255,255], 0));
-                    sg.addColorStop(1, rgba([255,255,255], s.life * 0.9));
+                    sg.addColorStop(0, rgba(sc, 0));
+                    sg.addColorStop(1, rgba(sc, s.life * 0.9));
                     ctx.save();
                     ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(s.x, s.y);
                     ctx.strokeStyle = sg;
                     ctx.lineWidth = Math.max(0.5, s.life * 1.8);
                     ctx.stroke();
-                    /* glow dot at head */
                     var dotG = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 4);
-                    dotG.addColorStop(0, rgba([255,255,255], s.life * 0.8));
-                    dotG.addColorStop(1, rgba([255,255,255], 0));
+                    dotG.addColorStop(0, rgba(sc, s.life * 0.8));
+                    dotG.addColorStop(1, rgba(sc, 0));
                     ctx.beginPath(); ctx.arc(s.x, s.y, 4, 0, Math.PI * 2);
                     ctx.fillStyle = dotG; ctx.fill();
                     ctx.restore();
                     return s.x < W + 200 && s.y < H + 200;
                 });
+            } else {
+                shooters.length = 0;
             }
 
             requestAnimationFrame(draw);
         }
 
-        /* ---- card tilt loop (separate rAF for smooth interpolation) ---- */
+        /* ---- card tilt loop ---- */
         function tiltLoop() {
             if (card) {
                 var tx = (mouse.x / W - 0.5) * CFG.CARD_TILT_DEG;
@@ -309,56 +497,23 @@
             requestAnimationFrame(tiltLoop);
         }
 
-        /* ---- events ---- */
-        window.addEventListener('mousemove', function (e) {
-            mouse.tx = e.clientX;
-            mouse.ty = e.clientY;
-            mouseAlive = true;
-        });
-        document.addEventListener('mouseleave', function () {
-            mouse.tx = W / 2;
-            mouse.ty = H / 2;
-        });
-        window.addEventListener('resize', function () {
-            resize(); initStars();
-        }, { passive: true });
-
-        /* ---- boot ---- */
-        resize();
-        initStars();
-        initNebulae();
-        initOrbs();
-
-        /* Reduced motion: paint one static frame, skip all animation loops */
-        var reduceMotion = window.matchMedia &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduceMotion) {
-            CFG.SHOOT_STARS   = false;
-            CFG.NEBULA_BREATHE = false;
-            drawStatic();
-            window.addEventListener('resize', function () {
-                resize(); initStars(); drawStatic();
-            }, { passive: true });
-            return;
-        }
-
-        nextShoot = Date.now() + rand(2500, 5000);  /* first shot arrives quickly */
-        requestAnimationFrame(draw);
-        requestAnimationFrame(tiltLoop);
-
-        /* single still frame for reduced-motion users */
+        /* ---- single still frame for reduced-motion users ---- */
         function drawStatic() {
+            var elapsed = 0;
             ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = '#000';
+            ctx.fillStyle = CFG.BG_FILL || '#000';
             ctx.fillRect(0, 0, W, H);
+            drawWash(elapsed);
+            drawCurtains(elapsed);
             nebulae.forEach(function (n) {
+                var col = nebColour(n, elapsed);
                 var nx = n.x * W, ny = n.y * H, rw = n.rx * W;
                 ctx.save();
                 ctx.translate(nx, ny);
                 ctx.scale(1, n.ry / n.rx);
                 var g = ctx.createRadialGradient(0, 0, 0, 0, 0, rw);
-                g.addColorStop(0, rgba(n.c, n.op));
-                g.addColorStop(1, rgba(n.c, 0));
+                g.addColorStop(0, rgba(col, n.op));
+                g.addColorStop(1, rgba(col, 0));
                 ctx.beginPath(); ctx.arc(0, 0, rw, 0, Math.PI * 2);
                 ctx.fillStyle = g; ctx.fill();
                 ctx.restore();
@@ -379,7 +534,63 @@
                     ctx.fill();
                 });
             });
+            drawParticles(false);
         }
+
+        /* ---- re-seed the world for a new look (no new loop) ---- */
+        function applyLook(opts) {
+            var k;
+            for (k in opts) CFG[k] = opts[k];
+            card = CFG.CARD_ID ? document.getElementById(CFG.CARD_ID) : card;
+            initStars();
+            initNebulae();
+            initOrbs();
+            initParticles();
+            initCurtains();
+            shooters.length = 0;
+            nextShoot = Date.now() + rand(CFG.SHOOT_MIN, CFG.SHOOT_MAX);
+            if (reduceMotion) drawStatic();
+        }
+        global.BgEngine._apply = applyLook;
+        global.BgEngine._getCfg = function () {
+            var o = {}, key;
+            for (key in CFG) o[key] = CFG[key];
+            return o;
+        };
+
+        /* ---- events ---- */
+        window.addEventListener('mousemove', function (e) {
+            mouse.tx = e.clientX;
+            mouse.ty = e.clientY;
+            mouseAlive = true;
+        });
+        document.addEventListener('mouseleave', function () {
+            mouse.tx = W / 2;
+            mouse.ty = H / 2;
+        });
+        window.addEventListener('resize', function () {
+            resize(); initStars();
+            if (reduceMotion) drawStatic();
+        }, { passive: true });
+
+        /* ---- boot ---- */
+        resize();
+        initStars();
+        initNebulae();
+        initOrbs();
+        initParticles();
+        initCurtains();
+
+        if (reduceMotion) {
+            CFG.SHOOT_STARS    = false;
+            CFG.NEBULA_BREATHE = false;
+            drawStatic();
+            return;
+        }
+
+        nextShoot = Date.now() + rand(2500, 5000);
+        requestAnimationFrame(draw);
+        requestAnimationFrame(tiltLoop);
     }
 
 })(window);

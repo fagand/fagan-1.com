@@ -32,14 +32,33 @@
     <!-- Style -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <!-- Shared design system -->
+    <!-- Look bootstrap: set data-look before first paint (no flash) -->
+    <script>
+        (function () {
+            try {
+                var L = ['nightfall', 'ember', 'abyss', 'aurora', 'prism'];
+                var s = localStorage.getItem('f1-look');
+                var k = (s && s !== 'auto' && L.indexOf(s) >= 0)
+                        ? s : L[Math.floor(Math.random() * L.length)];
+                document.documentElement.setAttribute('data-look', k);
+                var m = localStorage.getItem('f1-mode');
+                var theme = (m === 'light' || m === 'dark') ? m
+                        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="/assets/css/site.css" />
+    <!-- Shared palette layer — single source of truth (loaded last so look
+         overrides win over site.css; tokens resolve regardless of order) -->
+    <link rel="stylesheet" href="/assets/css/looks.css" />
     <!-- Keep faq.css for accordion/search-specific styles -->
     <link rel="stylesheet" href="/assets/css/faq.css" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3755930033410564", enable_page_level_ads: true });</script>
     <style>
         /* Override faq.css conflicts with new design system */
-        body { background: transparent !important; color: rgba(255,255,255,0.82) !important; }
+        body { background: transparent !important; color: rgba(var(--fg-rgb),0.82) !important; }
         #header { display: none; }  /* replaced by .site-header below */
         #wrapper { position: relative; z-index: 10; }
         #footer  { display: none; }  /* replaced by .site-footer below */
@@ -48,35 +67,52 @@
            so pin faq.css's light-mode variables to their dark values. */
         :root {
             --navBackgroundColour: #101400;
-            --navInactiveTextColour: rgba(204, 255, 0, 0.4);
-            --navInactiveTextHoverColour: rgba(204, 255, 0);
-            --linestartcolor: rgba(204, 255, 0, 0.50);
+            --navInactiveTextColour: rgba(var(--accent-rgb), 0.4);
+            --navInactiveTextHoverColour: rgba(var(--accent-rgb));
+            --linestartcolor: rgba(var(--accent-rgb), 0.50);
             --mainbgcolor: #000;
             --bodyTextColour: #fff;
-            --bodyHeadingColour: #ccff00;
+            --bodyHeadingColour: var(--accent);
             --midsectioncolor: #000;
             --footercolor: #101400;
             --sectionscolor: #000;
             --white: #fff;
             --black: #fff;
-            --white015percent: rgba(255, 255, 255, 0.25);
-            --white55percent: rgba(255, 255, 255, 0.55);
-            --formBorderColour: rgba(204, 255, 0, 0.4);
-            --formBorderColourFocus: rgba(255, 255, 255, 0.8);
-            --buttonHoverColour: rgba(204, 255, 0, 0.65);
-            --aElementborderBottomColour: #ccff00;
-            --aElementHoverColour: #ccff00;
+            --white015percent: rgba(var(--fg-rgb), 0.25);
+            --white55percent: rgba(var(--fg-rgb), 0.55);
+            --formBorderColour: rgba(var(--accent-rgb), 0.4);
+            --formBorderColourFocus: rgba(var(--fg-rgb), 0.8);
+            --buttonHoverColour: rgba(var(--accent-rgb), 0.65);
+            --aElementborderBottomColour: var(--accent);
+            --aElementHoverColour: var(--accent);
+        }
+
+        /* Light mode: flip faq.css's template vars to fresh, bright values
+           so the archive matches the rest of the site (the pins above are
+           the dark defaults; these win via higher specificity). */
+        :root[data-theme="light"] {
+            --navBackgroundColour: #ffffff;
+            --mainbgcolor: #ffffff;
+            --bodyTextColour: #26291c;
+            --midsectioncolor: #ffffff;
+            --footercolor: #ffffff;
+            --sectionscolor: #ffffff;
+            --white: #1a1c12;
+            --black: #ffffff;
+            --white015percent: rgba(0, 0, 0, 0.12);
+            --white55percent: rgba(20, 22, 14, 0.60);
         }
 
         /* Let the starfield show through the main panel */
         #main.wrapper.style1 { background-color: rgba(6, 6, 6, 0.55); }
+        :root[data-theme="light"] #main.wrapper.style1 { background-color: rgba(255, 255, 255, 0.50); }
 
         /* Search input — match the glass design system */
         #myInput {
-            background-color: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(204, 255, 0, 0.25);
+            background-color: rgba(var(--fg-rgb), 0.04);
+            border: 1px solid rgba(var(--accent-rgb), 0.25);
             border-radius: 10px;
-            color: #fff;
+            color: var(--white);
         }
     </style>
 </head>
@@ -1365,6 +1401,8 @@
             CARD_ID:        null
         });
     </script>
+    <!-- Looks system: switcher, persistence, OS light/dark, drives the backdrop -->
+    <script src="/assets/js/theme.js"></script>
     <!-- Track search (original functionality preserved) -->
     <script src="/assets/js/tracksearch.js"></script>
     <!-- AdSense -->

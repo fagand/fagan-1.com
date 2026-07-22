@@ -1,0 +1,237 @@
+/* =================================================================
+   looks.css — SINGLE SOURCE OF TRUTH for the palette  |  fagan-1.com
+
+   A "look" = a backdrop effect + a colour scheme, chosen by the user.
+   Light/dark is a SEPARATE axis. It is resolved in JS (theme.js / the
+   pre-paint head bootstrap) which stamps  data-theme="light|dark"  on
+   <html> — so a manual toggle can override the OS, and "follow system"
+   still works. CSS keys purely off [data-theme]; no prefers-color-scheme
+   query lives here.
+
+   Consumers of these tokens:
+     (a) CSS accent/foreground literals resolve through
+         rgba(var(--accent-rgb), x) / rgba(var(--fg-rgb), x)
+     (b) index.html inline styles + site.css sub-page styles
+     (c) bg.js reads --bg and --accent-rgb live, so the canvas base fill
+         + accent are single-sourced from here.
+
+   Each look shifts background mood, backdrop effect AND accent, so the
+   looks read as distinct at a glance. Prism's accent is iridescent.
+
+   Linked from index.html AND every sub-page → the look + light/dark
+   treatment carry across the whole site.
+   ================================================================= */
+
+/* =====================================================================
+   DARK  (default — bare :root, plus explicit [data-theme="dark"])
+   Nightfall (no data-look override) MUST stay identical to the original.
+   ===================================================================== */
+:root,
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --accent:            #ccff00;
+    --accent-rgb:        204, 255, 0;
+    --accent-text-rgb:   204, 255, 0;
+    --accent-grad:       var(--accent);
+
+    --bg:                #000000;
+    --white:             #ffffff;
+    --fg-rgb:            255, 255, 255;
+    --text:              rgba(255, 255, 255, 0.82);
+    --text-dim:          rgba(255, 255, 255, 0.40);
+    --hairline:          rgba(255, 255, 255, 0.08);
+    --card-bg:           rgba(6, 6, 6, 0.65);
+    --card-border:       rgba(var(--accent-rgb), 0.13);
+}
+
+/* Per-look DARK overrides — background mood AND accent shift per look. */
+:root[data-look="ember"] {
+    --bg: #0b0704;
+    --accent: #ff9d4d; --accent-rgb: 255, 150, 70; --accent-text-rgb: 255, 176, 112;
+}
+:root[data-look="abyss"] {
+    --bg: #01080a;
+    --accent: #33e1d4; --accent-rgb: 45, 220, 205; --accent-text-rgb: 120, 240, 230;
+}
+:root[data-look="aurora"] {
+    --bg: #03060c;
+    --accent: #6effb0; --accent-rgb: 110, 255, 176; --accent-text-rgb: 150, 255, 200;
+}
+:root[data-look="prism"] {
+    --bg: #080614;
+    --accent: #cbb8ff; --accent-rgb: 200, 180, 255; --accent-text-rgb: 203, 184, 255;
+    --accent-grad: linear-gradient(100deg,
+        #b7ffd8, #a9e0ff, #cbb8ff, #f4b8e6, #d8ffb0, #b7ffd8);
+}
+
+/* =====================================================================
+   LIGHT  — genuinely fresh & bright: near-white tinted bases, dark text.
+   NOT a dimmed dark theme. Applied only when JS resolves data-theme=light.
+   ===================================================================== */
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --accent:            #3c4a00;
+    --accent-rgb:        110, 140, 0;
+    --accent-text-rgb:   60, 74, 0;
+    --accent-grad:       var(--accent);
+
+    --bg:                #eef1e7;
+    --white:             #14160f;
+    --fg-rgb:            24, 26, 18;
+    --text:              rgba(20, 22, 14, 0.86);
+    --text-dim:          rgba(20, 22, 14, 0.55);
+    --hairline:          rgba(0, 0, 0, 0.10);
+    --card-bg:           rgba(255, 255, 255, 0.66);
+    --card-border:       rgba(60, 74, 0, 0.20);
+}
+
+/* Per-look LIGHT overrides (higher specificity than the light base). */
+:root[data-theme="light"][data-look="nightfall"] { --bg: #eef1e7; }
+:root[data-theme="light"][data-look="ember"] {
+    --bg: #f7ece0;
+    --accent: #9a4f14; --accent-rgb: 150, 82, 22; --accent-text-rgb: 122, 62, 8;
+    --card-border: rgba(150, 82, 22, 0.22);
+}
+:root[data-theme="light"][data-look="abyss"] {
+    --bg: #e3f0ee;
+    --accent: #0e6f66; --accent-rgb: 20, 120, 110; --accent-text-rgb: 12, 92, 84;
+    --card-border: rgba(20, 120, 110, 0.22);
+}
+:root[data-theme="light"][data-look="aurora"] {
+    --bg: #e9f3ea;
+    --accent: #1d7a4a; --accent-rgb: 30, 122, 74; --accent-text-rgb: 20, 96, 58;
+    --card-border: rgba(30, 122, 74, 0.22);
+}
+:root[data-theme="light"][data-look="prism"] {
+    --bg: #efecf6;
+    --accent: #5a4b8a; --accent-rgb: 120, 100, 170; --accent-text-rgb: 74, 61, 112;
+    --card-border: rgba(120, 100, 170, 0.24);
+    --accent-grad: linear-gradient(100deg,
+        #2f6a4f, #2c5f8a, #5a4b8a, #7a3d6a, #4a5d2f, #2f6a4f);
+}
+
+/* Sub-page HUD chrome — flip the dark header bar to a light, translucent
+   surface in light mode so the (now dark) text tokens stay legible. */
+:root[data-theme="light"] .site-header {
+    background: rgba(255, 255, 255, 0.72);
+    border-bottom-color: rgba(60, 74, 0, 0.16);
+}
+:root[data-theme="light"] .site-header nav a       { color: rgba(20, 22, 14, 0.58); }
+:root[data-theme="light"] .site-header nav a:hover { background: rgba(0, 0, 0, 0.06); }
+:root[data-theme="light"] .site-header .sep        { background: rgba(0, 0, 0, 0.16); }
+
+/* ---------------------------------------------------------------
+   PRISM accent — a slow, restrained iridescent drift on the prominent
+   accent text only. Small text keeps the solid --accent fallback.
+   --------------------------------------------------------------- */
+:root[data-look="prism"] .hero-word em,
+:root[data-look="prism"] .hud-brand,
+:root[data-look="prism"] .site-header .brand,
+:root[data-look="prism"] .era-copy .era-year,
+:root[data-look="prism"] .rail-head h2 em,
+:root[data-look="prism"] .scene-end h2 em,
+:root[data-look="prism"] .story-intro h2 em,
+:root[data-look="prism"] .page-hero h1 em {
+    background: var(--accent-grad);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: none;
+    animation: prism-drift 9s linear infinite;
+}
+@keyframes prism-drift {
+    to { background-position: 220% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root[data-look="prism"] .hero-word em,
+    :root[data-look="prism"] .hud-brand,
+    :root[data-look="prism"] .site-header .brand,
+    :root[data-look="prism"] .era-copy .era-year,
+    :root[data-look="prism"] .rail-head h2 em,
+    :root[data-look="prism"] .scene-end h2 em,
+    :root[data-look="prism"] .story-intro h2 em,
+    :root[data-look="prism"] .page-hero h1 em {
+        animation: none;
+    }
+}
+
+/* ---------------------------------------------------------------
+   HUD CONTROLS — compact pills, fixed bottom-right. The look-cycle pill
+   and the light/dark toggle sit side by side, sharing one style.
+   Markup injected by theme.js.
+   --------------------------------------------------------------- */
+.hud-controls {
+    position: fixed;
+    right: max(16px, 3vw);
+    bottom: max(16px, 3vw);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(var(--accent-rgb), 0.30);
+    border-radius: 100px;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+}
+.hud-pill:hover {
+    border-color: rgba(var(--accent-rgb), 0.6);
+    transform: translateY(-2px);
+}
+.hud-pill:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+/* light mode: the dark glass pill would clash with a bright page → flip it */
+:root[data-theme="light"] .hud-pill {
+    background: rgba(255, 255, 255, 0.66);
+    border-color: rgba(var(--accent-rgb), 0.40);
+}
+
+/* look-cycle pill: leading look-colour dot */
+.look-switch::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(var(--accent-rgb), 1);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.9);
+    flex-shrink: 0;
+}
+:root[data-look="prism"] .look-switch::before {
+    background: linear-gradient(100deg, #b7ffd8, #cbb8ff, #f4b8e6);
+}
+.look-switch .look-name { line-height: 1; }
+
+/* light/dark toggle: glyph only, square-ish */
+.mode-switch {
+    padding: 8px 12px;
+    letter-spacing: 0;
+    font-size: 13px;
+}
+.mode-switch .mode-glyph { line-height: 1; }
+
+@media (max-width: 640px) {
+    .hud-pill { padding: 7px 11px; font-size: 10px; letter-spacing: 0.08em; }
+    .mode-switch { font-size: 12px; }
+}

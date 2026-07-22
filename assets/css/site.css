@@ -4,19 +4,15 @@
    index.html uses its own inline styles — tokens are mirrored.
    ================================================================= */
 
-/* ---- Design tokens ---- */
+/* ---- Design tokens ----
+   Palette tokens (--accent, --accent-rgb, --bg, --white, --text,
+   --text-dim, --card-bg, --card-border …) are the single source of truth
+   in /assets/css/looks.css — link it BEFORE this file. Only structural
+   tokens live here. */
 :root {
-    --accent:      #ccff00;
-    --accent-rgb:  204, 255, 0;
-    --bg:          #000000;
-    --white:       #ffffff;
-    --text:        rgba(255, 255, 255, 0.82);
-    --text-dim:    rgba(255, 255, 255, 0.40);
-    --card-bg:     rgba(6, 6, 6, 0.65);
-    --card-border: rgba(204, 255, 0, 0.13);
-    --header-h:    56px;
-    --font-mono:   ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono',
-                   Menlo, Consolas, monospace;
+    --header-h:  56px;
+    --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono',
+                 Menlo, Consolas, monospace;
 }
 
 /* ---- Reset ---- */
@@ -62,8 +58,8 @@ body::before {
     z-index: 1;
     pointer-events: none;
     background-image:
-        linear-gradient(rgba(204, 255, 0, 0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(204, 255, 0, 0.028) 1px, transparent 1px);
+        linear-gradient(rgba(var(--accent-rgb), 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--accent-rgb), 0.028) 1px, transparent 1px);
     background-size: 72px 72px;
     -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 0%,
         #000 0%, transparent 78%);
@@ -86,7 +82,7 @@ body::before {
     background: rgba(0, 0, 0, 0.82);
     backdrop-filter: blur(22px) saturate(160%);
     -webkit-backdrop-filter: blur(22px) saturate(160%);
-    border-bottom: 1px solid rgba(204, 255, 0, 0.09);
+    border-bottom: 1px solid rgba(var(--accent-rgb), 0.09);
 }
 
 .site-header .brand {
@@ -112,7 +108,7 @@ body::before {
     height: 6px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 8px rgba(204, 255, 0, 0.9);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.9);
     animation: pulse-dot 2.6s ease-in-out infinite;
 }
 
@@ -137,7 +133,7 @@ body::before {
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.50);
+    color: rgba(var(--fg-rgb), 0.50);
     text-decoration: none;
     padding: 6px 11px;
     border-radius: 8px;
@@ -145,12 +141,12 @@ body::before {
     transition: color 0.2s, background 0.2s;
 }
 .site-header nav a:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    background: rgba(var(--fg-rgb), 0.05);
 }
 .site-header nav a.active {
     color: var(--accent);
-    text-shadow: 0 0 14px rgba(204, 255, 0, 0.4);
+    text-shadow: 0 0 14px rgba(var(--accent-rgb), 0.4);
 }
 .site-header nav a.active::after {
     content: '';
@@ -160,14 +156,14 @@ body::before {
     bottom: 1px;
     height: 1px;
     background: var(--accent);
-    box-shadow: 0 0 8px rgba(204, 255, 0, 0.8);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.8);
 }
 
 /* Separator dot */
 .site-header .sep {
     width: 3px; height: 3px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.15);
+    background: rgba(var(--fg-rgb),0.15);
     flex-shrink: 0;
 }
 
@@ -201,7 +197,7 @@ body::before {
     font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(204, 255, 0, 0.65);
+    color: rgba(var(--accent-rgb), 0.65);
     margin-bottom: 16px;
 }
 .page-hero .kicker::before {
@@ -209,14 +205,14 @@ body::before {
     width: 28px;
     height: 1px;
     background: var(--accent);
-    box-shadow: 0 0 8px rgba(204, 255, 0, 0.7);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.7);
 }
 
 .page-hero h1 {
     font-size: clamp(28px, 5vw, 48px);
     font-weight: 700;
     letter-spacing: -0.025em;
-    color: #fff;
+    color: var(--white);
     line-height: 1.1;
     margin-bottom: 10px;
 }
@@ -224,7 +220,7 @@ body::before {
 .page-hero h1 em {
     color: var(--accent);
     font-style: normal;
-    text-shadow: 0 0 32px rgba(204, 255, 0, 0.45);
+    text-shadow: 0 0 32px rgba(var(--accent-rgb), 0.45);
 }
 
 .page-hero p {
@@ -255,7 +251,7 @@ body::before {
     top: 0; left: 15%; right: 15%;
     height: 1px;
     background: linear-gradient(to right,
-        transparent, rgba(204, 255, 0, 0.35), transparent);
+        transparent, rgba(var(--accent-rgb), 0.35), transparent);
     pointer-events: none;
 }
 
@@ -305,7 +301,7 @@ body::before {
 .prose a {
     color: var(--white);
     text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.22);
+    border-bottom: 1px solid rgba(var(--fg-rgb),0.22);
     padding-bottom: 1px;
     transition: color 0.25s, border-color 0.25s;
 }
@@ -325,8 +321,8 @@ body::before {
     align-items: center;
     gap: 7px;
     padding: 9px 20px;
-    background: rgba(204, 255, 0, 0.07);
-    border: 1px solid rgba(204, 255, 0, 0.28);
+    background: rgba(var(--accent-rgb), 0.07);
+    border: 1px solid rgba(var(--accent-rgb), 0.28);
     border-radius: 100px;
     color: var(--accent);
     font-family: var(--font-mono);
@@ -343,11 +339,11 @@ body::before {
         transform    0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .pill-btn:hover {
-    background: rgba(204, 255, 0, 0.13);
-    border-color: rgba(204, 255, 0, 0.5);
-    color: #fff;
+    background: rgba(var(--accent-rgb), 0.13);
+    border-color: rgba(var(--accent-rgb), 0.5);
+    color: var(--white);
     transform: translateY(-2px);
-    box-shadow: 0 6px 22px rgba(204, 255, 0, 0.16);
+    box-shadow: 0 6px 22px rgba(var(--accent-rgb), 0.16);
 }
 
 /* Scanning sheen sweep on hover */
@@ -358,7 +354,7 @@ body::before {
     left: -60%;
     width: 40%;
     background: linear-gradient(105deg,
-        transparent, rgba(255, 255, 255, 0.14), transparent);
+        transparent, rgba(var(--fg-rgb), 0.14), transparent);
     transform: skewX(-18deg);
     pointer-events: none;
 }
@@ -375,7 +371,7 @@ body::before {
 .site-footer {
     position: relative;
     z-index: 10;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(var(--fg-rgb), 0.06);
     padding: 28px 24px;
     display: flex;
     flex-wrap: wrap;

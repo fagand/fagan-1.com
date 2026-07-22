@@ -25,7 +25,26 @@
     <meta name="msapplication-config"    content="/favicon/browserconfig.xml">
     <meta name="theme-color"             content="#000">
     <!-- Shared design system -->
+    <!-- Look bootstrap: set data-look before first paint (no flash) -->
+    <script>
+        (function () {
+            try {
+                var L = ['nightfall', 'ember', 'abyss', 'aurora', 'prism'];
+                var s = localStorage.getItem('f1-look');
+                var k = (s && s !== 'auto' && L.indexOf(s) >= 0)
+                        ? s : L[Math.floor(Math.random() * L.length)];
+                document.documentElement.setAttribute('data-look', k);
+                var m = localStorage.getItem('f1-mode');
+                var theme = (m === 'light' || m === 'dark') ? m
+                        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="/assets/css/site.css" />
+    <!-- Shared palette layer — single source of truth (loaded last so look
+         overrides win over site.css; tokens resolve regardless of order) -->
+    <link rel="stylesheet" href="/assets/css/looks.css" />
     <!-- Flipster carousel -->
     <link rel="stylesheet" href="/assets/coverflow/dist/jquery.flipster.min.css?v=1" />
     <script src="https://kit.fontawesome.com/d65db72a01.js" crossorigin="anonymous"></script>
@@ -68,7 +87,7 @@
             border-radius: 8px;
             object-fit: cover;
             flex-shrink: 0;
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(var(--fg-rgb),0.08);
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
         }
 
@@ -81,7 +100,7 @@
             font-size: 10px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: rgba(204,255,0,0.55);
+            color: rgba(var(--accent-rgb),0.55);
             font-weight: 500;
             margin-bottom: 4px;
         }
@@ -90,7 +109,7 @@
             font-size: 18px;
             font-weight: 700;
             letter-spacing: -0.02em;
-            color: #fff;
+            color: var(--white);
             margin-bottom: 12px;
         }
 
@@ -107,23 +126,23 @@
             font-size: 11px;
             letter-spacing: 0.07em;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
+            color: rgba(var(--fg-rgb),0.5);
             text-decoration: none;
             padding: 5px 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(var(--fg-rgb),0.1);
             border-radius: 100px;
             transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
 
         .listen-link:hover {
-            color: var(--accent, #ccff00);
-            border-color: rgba(204,255,0,0.35);
-            background: rgba(204,255,0,0.05);
+            color: var(--accent, var(--accent));
+            border-color: rgba(var(--accent-rgb),0.35);
+            background: rgba(var(--accent-rgb),0.05);
         }
 
         .tracklist-divider {
             height: 1px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(var(--fg-rgb),0.06);
             margin: 20px 0;
         }
 
@@ -131,7 +150,7 @@
             font-size: 11px;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.35);
+            color: rgba(var(--fg-rgb),0.35);
             margin-bottom: 14px;
             font-weight: 500;
         }
@@ -150,7 +169,7 @@
             align-items: baseline;
             gap: 12px;
             font-size: 13.5px;
-            color: rgba(255,255,255,0.72);
+            color: rgba(var(--fg-rgb),0.72);
             line-height: 1.5;
         }
 
@@ -159,7 +178,7 @@
             font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: 0.08em;
-            color: rgba(204,255,0,0.4);
+            color: rgba(var(--accent-rgb),0.4);
             font-weight: 600;
             flex-shrink: 0;
             width: 22px;
@@ -168,14 +187,14 @@
         .tracklist-card ol li a {
             color: inherit;
             text-decoration: none;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
+            border-bottom: 1px solid rgba(var(--fg-rgb),0.15);
             padding-bottom: 1px;
             transition: color 0.2s, border-color 0.2s;
         }
 
         .tracklist-card ol li a:hover {
-            color: #ccff00;
-            border-color: #ccff00;
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
         /* removed track */
@@ -197,13 +216,13 @@
         .blm-notice p {
             font-size: 13.5px;
             line-height: 1.7;
-            color: rgba(255,255,255,0.6);
+            color: rgba(var(--fg-rgb),0.6);
         }
 
         .blm-notice a {
-            color: #ccff00;
+            color: var(--accent);
             text-decoration: none;
-            border-bottom: 1px solid rgba(204,255,0,0.3);
+            border-bottom: 1px solid rgba(var(--accent-rgb),0.3);
             padding-bottom: 1px;
         }
 
@@ -218,13 +237,13 @@
         .requests-strip h2 {
             font-size: 16px;
             font-weight: 600;
-            color: #fff;
+            color: var(--white);
             margin-bottom: 8px;
         }
 
         .requests-strip p {
             font-size: 14px;
-            color: rgba(255,255,255,0.55);
+            color: rgba(var(--fg-rgb),0.55);
             margin-bottom: 20px;
         }
 
@@ -614,6 +633,8 @@
             CARD_ID:         null
         });
     </script>
+    <!-- Looks system: switcher, persistence, OS light/dark, drives the backdrop -->
+    <script src="/assets/js/theme.js"></script>
     <!-- Flipster -->
     <script src="/assets/coverflow/dist/jquery.flipster.min.js"></script>
     <script>$('.my-flipster').flipster();</script>
